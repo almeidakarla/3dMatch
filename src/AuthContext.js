@@ -54,21 +54,25 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const fetchProfile = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+  console.log('Fetching profile for user:', userId); // ADD THIS
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-      if (error) throw error;
-      setProfile(data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log('Profile data:', data); // ADD THIS
+    console.log('Profile error:', error); // ADD THIS
+
+    if (error) throw error;
+    setProfile(data);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const signUp = async (email, password, userType, fullName) => {
     try {
