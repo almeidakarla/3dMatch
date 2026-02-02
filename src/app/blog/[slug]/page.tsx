@@ -38,20 +38,30 @@ interface PageProps {
 }
 
 // Generate static params for pre-rendering popular posts
-// Uses static client (no cookies) since this runs at build time
+// Returns empty array if env vars unavailable (falls back to dynamic rendering)
 export async function generateStaticParams() {
-  const supabase = createStaticClient()
+  // Skip static generation if Supabase env vars aren't available at build time
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return []
+  }
 
-  const { data: posts } = await supabase
-    .from('blog_posts')
-    .select('slug')
-    .eq('status', 'published')
-    .order('views_count', { ascending: false })
-    .limit(10)
+  try {
+    const supabase = createStaticClient()
 
-  return (posts || []).map((post) => ({
-    slug: post.slug,
-  }))
+    const { data: posts } = await supabase
+      .from('blog_posts')
+      .select('slug')
+      .eq('status', 'published')
+      .order('views_count', { ascending: false })
+      .limit(10)
+
+    return (posts || []).map((post) => ({
+      slug: post.slug,
+    }))
+  } catch {
+    // If anything fails, fall back to dynamic rendering
+    return []
+  }
 }
 
 // Generate metadata for SEO
