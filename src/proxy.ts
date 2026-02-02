@@ -2,10 +2,10 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 /**
- * MIDDLEWARE — runs BEFORE every matched request
+ * PROXY — runs BEFORE every matched request (renamed from middleware in Next.js 16)
  *
- * Why do we need middleware for auth?
- * 1. Supabase auth tokens expire. The middleware refreshes them on every request
+ * Why do we need proxy for auth?
+ * 1. Supabase auth tokens expire. The proxy refreshes them on every request
  *    so the user doesn't get randomly logged out.
  * 2. It runs before Server Components render, so by the time your page loads,
  *    the auth cookie is always fresh.
@@ -13,9 +13,9 @@ import { NextResponse, type NextRequest } from 'next/server'
  *    before the page even starts rendering (faster than client-side redirects).
  *
  * Old CRA approach: AuthContext checked localStorage on mount, showed loading spinner
- * New Next.js approach: Middleware refreshes cookie before page renders — no spinner needed
+ * New Next.js approach: Proxy refreshes cookie before page renders — no spinner needed
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
 }
 
 /**
- * Matcher config: which routes should the middleware run on?
+ * Matcher config: which routes should the proxy run on?
  *
  * We exclude:
  * - _next/static (static files)
@@ -84,7 +84,7 @@ export async function middleware(request: NextRequest) {
  * - favicon.ico
  * - Public assets
  *
- * Everything else goes through middleware to keep auth cookies fresh.
+ * Everything else goes through proxy to keep auth cookies fresh.
  */
 export const config = {
   matcher: [

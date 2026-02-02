@@ -1,11 +1,11 @@
-'use client'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/client'
+import BlogPostClient from './BlogPostClient'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
-import { Calendar, Clock, ArrowLeft, Tag, Share2 } from 'lucide-react'
-import PublicLayout from '@/components/layout/PublicLayout'
+// Revalidate every 5 minutes for ISR
+export const revalidate = 300
 
 interface BlogPostData {
   id: string
@@ -33,143 +33,93 @@ interface RelatedPost {
   featured_image?: string
 }
 
-export default function BlogPostPage() {
-  const params = useParams()
-  const router = useRouter()
-  const slug = params.slug as string
-  const supabase = createClient()
-  const [post, setPost] = useState<BlogPostData | null>(null)
-  const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([])
-  const [loading, setLoading] = useState(true)
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
 
-  const loadPost = useCallback(async () => {
-    try {
-      setLoading(true)
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select(`*, author:profiles(full_name, profile_photo), blog_post_categories(category:blog_categories(id, name, slug)), blog_post_tags(tag:blog_tags(id, name, slug))`)
-        .eq('slug', slug)
-        .eq('status', 'published')
-        .single()
+// Generate static params for pre-rendering popular posts
+// Uses static client (no cookies) since this runs at build time
+export async function generateStaticParams() {
+  const supabase = createStaticClient()
 
-      if (error) throw error
-      setPost(data as unknown as BlogPostData)
+  const { data: posts } = await supabase
+    .from('blog_posts')
+    .select('slug')
+    .eq('status', 'published')
+    .order('views_count', { ascending: false })
+    .limit(10)
 
-      // Increment view count
-      const { error: rpcError } = await supabase.rpc('increment', { row_id: data.id, table_name: 'blog_posts', column_name: 'views_count' })
-      if (rpcError) {
-        await supabase.from('blog_posts').update({ views_count: (data.views_count || 0) + 1 }).eq('id', data.id)
-      }
+  return (posts || []).map((post) => ({
+    slug: post.slug,
+  }))
+}
 
-      // Load related posts
-      if (data.blog_post_categories?.[0]?.category?.id) {
-        const { data: related } = await supabase
-          .from('blog_posts')
-          .select(`*, blog_post_categories!inner(category_id)`)
-          .eq('blog_post_categories.category_id', data.blog_post_categories[0].category.id)
-          .eq('status', 'published')
-          .neq('id', data.id)
-          .limit(3)
-        if (related) setRelatedPosts(related as unknown as RelatedPost[])
-      }
-    } catch (error) {
-      console.error('Error loading post:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [slug, supabase])
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createClient()
 
-  useEffect(() => {
-    loadPost()
-    window.scrollTo(0, 0)
-  }, [loadPost])
-
-  const formatDate = (dateString: string): string => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-
-  const handleShare = async () => {
-    const url = window.location.href
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: post?.title, text: post?.excerpt || post?.title, url })
-      } catch { /* User cancelled */ }
-    } else {
-      navigator.clipboard.writeText(url)
-      alert('Link copied to clipboard!')
-    }
-  }
-
-  if (loading) return <div className="loading">Loading post...</div>
+  const { data: post } = await supabase
+    .from('blog_posts')
+    .select('title, excerpt, seo_title, seo_description, seo_keywords, featured_image')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
 
   if (!post) {
-    return (
-      <PublicLayout>
-        <div className="error-state"><h2>Post not found</h2><Link href="/blog" className="btn-primary">Back to Blog</Link></div>
-      </PublicLayout>
-    )
+    return { title: 'Post Not Found' }
   }
 
-  return (
-    <PublicLayout>
-      <div className="blog-post-container">
-        <button className="btn-back" onClick={() => router.push('/blog')}><ArrowLeft size={20} /> Back to Blog</button>
+  return {
+    title: post.seo_title || post.title,
+    description: post.seo_description || post.excerpt || `Read ${post.title} on 3dMatch Blog`,
+    keywords: post.seo_keywords,
+    openGraph: {
+      title: post.seo_title || post.title,
+      description: post.seo_description || post.excerpt,
+      images: post.featured_image ? [post.featured_image] : [],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.seo_title || post.title,
+      description: post.seo_description || post.excerpt,
+      images: post.featured_image ? [post.featured_image] : [],
+    },
+  }
+}
 
-        <article className="blog-post">
-          <header className="post-header">
-            <div className="post-meta-top">
-              {post.blog_post_categories?.[0]?.category && (
-                <Link href={`/blog/category/${post.blog_post_categories[0].category.slug}`} className="post-category">
-                  {post.blog_post_categories[0].category.name}
-                </Link>
-              )}
-              <div className="post-meta-row">
-                <span className="post-date"><Calendar size={16} /> {formatDate(post.published_at)}</span>
-                {post.reading_time && <span className="post-reading-time"><Clock size={16} /> {post.reading_time} min read</span>}
-              </div>
-            </div>
-            <h1 className="post-title">{post.title}</h1>
-            {post.excerpt && <p className="post-excerpt">{post.excerpt}</p>}
-            <div className="post-author-row">
-              <div className="post-author">
-                {post.author?.profile_photo && <img src={post.author.profile_photo} alt={post.author.full_name} className="author-photo" />}
-                <div><span className="author-label">Written by</span><span className="author-name">{post.author?.full_name || 'Anonymous'}</span></div>
-              </div>
-              <button className="btn-share" onClick={handleShare}><Share2 size={18} /> Share</button>
-            </div>
-          </header>
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params
+  const supabase = await createClient()
 
-          {post.featured_image && <div className="post-featured-image"><img src={post.featured_image} alt={post.title} /></div>}
+  // Fetch main post
+  const { data: post, error } = await supabase
+    .from('blog_posts')
+    .select(`*, author:profiles(full_name, profile_photo), blog_post_categories(category:blog_categories(id, name, slug)), blog_post_tags(tag:blog_tags(id, name, slug))`)
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
 
-          <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+  if (error || !post) {
+    notFound()
+  }
 
-          {post.blog_post_tags && post.blog_post_tags.length > 0 && (
-            <div className="post-tags-section">
-              <h3>Tags</h3>
-              <div className="post-tags">
-                {post.blog_post_tags.map((pt, index) => (
-                  <Link key={index} href={`/blog/tag/${pt.tag.slug}`} className="post-tag"><Tag size={14} /> {pt.tag.name}</Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </article>
+  // Fetch related posts
+  let relatedPosts: RelatedPost[] = []
+  if (post.blog_post_categories?.[0]?.category?.id) {
+    const { data: related } = await supabase
+      .from('blog_posts')
+      .select(`id, title, slug, excerpt, featured_image, blog_post_categories!inner(category_id)`)
+      .eq('blog_post_categories.category_id', post.blog_post_categories[0].category.id)
+      .eq('status', 'published')
+      .neq('id', post.id)
+      .limit(3)
 
-        {relatedPosts.length > 0 && (
-          <section className="related-posts-section">
-            <h2 className="section-title">Related Articles</h2>
-            <div className="related-posts-grid">
-              {relatedPosts.map(relatedPost => (
-                <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`} className="related-post-card">
-                  {relatedPost.featured_image && <div className="related-post-image"><img src={relatedPost.featured_image} alt={relatedPost.title} /></div>}
-                  <div className="related-post-content">
-                    <h3>{relatedPost.title}</h3>
-                    {relatedPost.excerpt && <p>{relatedPost.excerpt.substring(0, 100)}...</p>}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
-    </PublicLayout>
-  )
+    if (related) {
+      relatedPosts = related as unknown as RelatedPost[]
+    }
+  }
+
+  return <BlogPostClient post={post as unknown as BlogPostData} relatedPosts={relatedPosts} />
 }

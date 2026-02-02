@@ -1,4 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 /**
  * BROWSER CLIENT — used in Client Components ('use client')
@@ -18,6 +19,19 @@ import { createBrowserClient } from '@supabase/ssr'
  */
 export function createClient() {
   return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+/**
+ * STATIC CLIENT — used for build-time operations (generateStaticParams, etc.)
+ *
+ * This client doesn't use cookies and is safe to use during static generation.
+ * Only use this for read-only operations on public data.
+ */
+export function createStaticClient() {
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
