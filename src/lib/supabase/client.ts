@@ -1,6 +1,11 @@
 import { createBrowserClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
+// Check if Supabase env vars are available
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const hasSupabaseConfig = !!(supabaseUrl && supabaseAnonKey)
+
 /**
  * BROWSER CLIENT — used in Client Components ('use client')
  *
@@ -18,10 +23,16 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
  * This is critical because Server Components can read cookies but NOT localStorage.
  */
 export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  if (!hasSupabaseConfig) {
+    // During build time without env vars, return a placeholder
+    // This allows static generation to complete
+    console.warn('Supabase env vars not configured - using placeholder client')
+    return createSupabaseClient(
+      'https://placeholder.supabase.co',
+      'placeholder-key'
+    )
+  }
+  return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 
 /**
@@ -31,8 +42,11 @@ export function createClient() {
  * Only use this for read-only operations on public data.
  */
 export function createStaticClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  if (!hasSupabaseConfig) {
+    return createSupabaseClient(
+      'https://placeholder.supabase.co',
+      'placeholder-key'
+    )
+  }
+  return createSupabaseClient(supabaseUrl, supabaseAnonKey)
 }
