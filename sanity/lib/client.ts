@@ -16,11 +16,21 @@ export const client = projectId
 
 const builder = projectId && client ? imageUrlBuilder(client) : null
 
+// Chainable placeholder for when Sanity is not configured
+const placeholderBuilder = {
+  url: () => '/placeholder.jpg',
+  width: () => placeholderBuilder,
+  height: () => placeholderBuilder,
+  quality: () => placeholderBuilder,
+  fit: () => placeholderBuilder,
+  auto: () => placeholderBuilder,
+  format: () => placeholderBuilder,
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function urlFor(source: any) {
   if (!builder) {
-    // Return a placeholder during build without Sanity config
-    return { url: () => '/placeholder.jpg' }
+    return placeholderBuilder
   }
   return builder.image(source)
 }
