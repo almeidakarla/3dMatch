@@ -7,7 +7,18 @@ import {
 } from './queries'
 import type { HomepageData, BlogPost, BlogCategory } from './types'
 
+const emptyHomepageData: HomepageData = {
+  heroImages: [],
+  portfolioCategories: [],
+  featuredArtists: [],
+  platformFeatures: [],
+  faqItems: [],
+  settings: null,
+}
+
 export async function getHomepageData(): Promise<HomepageData> {
+  if (!client) return emptyHomepageData
+
   return client.fetch(
     homepageDataQuery,
     {},
@@ -18,6 +29,8 @@ export async function getHomepageData(): Promise<HomepageData> {
 }
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
+  if (!client) return []
+
   return client.fetch(
     blogPostsQuery,
     {},
@@ -28,6 +41,8 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  if (!client) return null
+
   return client.fetch(
     blogPostBySlugQuery,
     { slug },
@@ -38,6 +53,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 }
 
 export async function getBlogCategories(): Promise<BlogCategory[]> {
+  if (!client) return []
+
   return client.fetch(
     blogCategoriesQuery,
     {},
