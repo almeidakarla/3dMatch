@@ -6,8 +6,8 @@ export default defineConfig({
   name: 'default',
   title: '3dMatch CMS',
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: 'i9rgaf3x',
+  dataset: 'production',
 
   plugins: [structureTool()],
 
