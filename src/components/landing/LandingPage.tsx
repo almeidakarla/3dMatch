@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import type { HomepageData } from '../../../sanity/lib/types';
+import { urlFor } from '../../../sanity/lib/client';
 
 interface PortfolioProject {
   image: string;
@@ -35,16 +37,63 @@ interface FaqItem {
   answer: string;
 }
 
-const LandingPage = () => {
+interface LandingPageProps {
+  sanityData?: HomepageData | null;
+}
+
+// Icon components for platform features
+const getFeatureIcon = (iconType: string) => {
+  switch (iconType) {
+    case 'dashboard':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+      );
+    case 'checkmark':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      );
+    case 'lock':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      );
+    case 'lightning':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
+
+const LandingPage = ({ sanityData }: LandingPageProps) => {
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const backgroundImages: string[] = [
-    '/bg-img-1.png',
-    '/bg-img-2.png',
-    '/bg-img-3.png',
-    '/bg-img-4.png',
-    '/bg-img-5.png',
-  ];
+
+  // Use Sanity hero images or fallback to static images
+  const backgroundImages: string[] = sanityData?.heroImages?.length
+    ? sanityData.heroImages.map((img) => urlFor(img.image).width(1920).quality(85).url())
+    : [
+        '/bg-img-1.png',
+        '/bg-img-2.png',
+        '/bg-img-3.png',
+        '/bg-img-4.png',
+        '/bg-img-5.png',
+      ];
+
+  // Hero attribution from Sanity or fallback
+  const heroAttribution = sanityData?.settings?.heroAttribution || 'Render created by a 3dMatch artist.';
 
   // Header scroll state
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -65,115 +114,134 @@ const LandingPage = () => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
-  const portfolioCategories: PortfolioCategory[] = [
-    {
-      name: 'Exterior Residential',
-      projects: [
-        { image: '/portfolio/exterior-1.jpg', title: 'Modern Villa' },
-        { image: '/portfolio/exterior-2.jpg', title: 'Luxury Apartment' },
-        { image: '/portfolio/exterior-3.jpg', title: 'Contemporary Home' },
-        { image: '/portfolio/exterior-4.jpg', title: 'Beach House' },
-        { image: '/portfolio/exterior-5.jpg', title: 'Urban Residence' },
-        { image: '/portfolio/exterior-6.jpg', title: 'Suburban Estate' }
-      ]
-    },
-    {
-      name: 'Interior Design',
-      projects: [
-        { image: '/portfolio/interior-1.jpg', title: 'Living Room' },
-        { image: '/portfolio/interior-2.jpg', title: 'Modern Kitchen' },
-        { image: '/portfolio/interior-3.jpg', title: 'Master Bedroom' },
-        { image: '/portfolio/interior-4.jpg', title: 'Open Concept' },
-        { image: '/portfolio/interior-5.jpg', title: 'Dining Area' },
-        { image: '/portfolio/interior-6.jpg', title: 'Home Office' }
-      ]
-    },
-    {
-      name: 'Commercial',
-      projects: [
-        { image: '/portfolio/commercial-1.jpg', title: 'Office Building' },
-        { image: '/portfolio/commercial-2.jpg', title: 'Retail Space' },
-        { image: '/portfolio/commercial-3.jpg', title: 'Hotel Lobby' },
-        { image: '/portfolio/commercial-4.jpg', title: 'Restaurant' },
-        { image: '/portfolio/commercial-5.jpg', title: 'Coworking Space' },
-        { image: '/portfolio/commercial-6.jpg', title: 'Shopping Center' }
-      ]
-    },
-    {
-      name: 'Aerial Views',
-      projects: [
-        { image: '/portfolio/aerial-1.jpg', title: 'Development Overview' },
-        { image: '/portfolio/aerial-2.jpg', title: 'Master Plan' },
-        { image: '/portfolio/aerial-3.jpg', title: 'Site Context' },
-        { image: '/portfolio/aerial-4.jpg', title: 'Bird\'s Eye View' },
-        { image: '/portfolio/aerial-5.jpg', title: 'Urban Layout' },
-        { image: '/portfolio/aerial-6.jpg', title: 'Landscape Design' }
-      ]
-    }
-  ];
+  // Use Sanity portfolio data or fallback
+  const portfolioCategories: PortfolioCategory[] = sanityData?.portfolioCategories?.length
+    ? sanityData.portfolioCategories.map((cat) => ({
+        name: cat.name,
+        projects: cat.projects.map((proj) => ({
+          image: urlFor(proj.image).width(600).height(400).url(),
+          title: proj.title,
+        })),
+      }))
+    : [
+        {
+          name: 'Exterior Residential',
+          projects: [
+            { image: '/portfolio/exterior-1.jpg', title: 'Modern Villa' },
+            { image: '/portfolio/exterior-2.jpg', title: 'Luxury Apartment' },
+            { image: '/portfolio/exterior-3.jpg', title: 'Contemporary Home' },
+            { image: '/portfolio/exterior-4.jpg', title: 'Beach House' },
+            { image: '/portfolio/exterior-5.jpg', title: 'Urban Residence' },
+            { image: '/portfolio/exterior-6.jpg', title: 'Suburban Estate' }
+          ]
+        },
+        {
+          name: 'Interior Design',
+          projects: [
+            { image: '/portfolio/interior-1.jpg', title: 'Living Room' },
+            { image: '/portfolio/interior-2.jpg', title: 'Modern Kitchen' },
+            { image: '/portfolio/interior-3.jpg', title: 'Master Bedroom' },
+            { image: '/portfolio/interior-4.jpg', title: 'Open Concept' },
+            { image: '/portfolio/interior-5.jpg', title: 'Dining Area' },
+            { image: '/portfolio/interior-6.jpg', title: 'Home Office' }
+          ]
+        },
+        {
+          name: 'Commercial',
+          projects: [
+            { image: '/portfolio/commercial-1.jpg', title: 'Office Building' },
+            { image: '/portfolio/commercial-2.jpg', title: 'Retail Space' },
+            { image: '/portfolio/commercial-3.jpg', title: 'Hotel Lobby' },
+            { image: '/portfolio/commercial-4.jpg', title: 'Restaurant' },
+            { image: '/portfolio/commercial-5.jpg', title: 'Coworking Space' },
+            { image: '/portfolio/commercial-6.jpg', title: 'Shopping Center' }
+          ]
+        },
+        {
+          name: 'Aerial Views',
+          projects: [
+            { image: '/portfolio/aerial-1.jpg', title: 'Development Overview' },
+            { image: '/portfolio/aerial-2.jpg', title: 'Master Plan' },
+            { image: '/portfolio/aerial-3.jpg', title: 'Site Context' },
+            { image: '/portfolio/aerial-4.jpg', title: 'Bird\'s Eye View' },
+            { image: '/portfolio/aerial-5.jpg', title: 'Urban Layout' },
+            { image: '/portfolio/aerial-6.jpg', title: 'Landscape Design' }
+          ]
+        }
+      ];
 
-  const featuredArtists: FeaturedArtist[] = [
-    {
-      name: 'Lucas M.',
-      title: '3D Architectural Visualizer',
-      location: 'São Paulo, Brazil',
-      description: 'Specialized in photorealistic exterior renders and luxury residential projects. 8+ years creating stunning visualizations that help clients sell properties faster.',
-      skills: ['3ds Max', 'V-Ray', 'Corona Renderer'],
-      portfolio: [
-        '/portfolio/exterior-1.jpg',
-        '/portfolio/exterior-2.jpg',
-        '/portfolio/exterior-3.jpg',
-        '/portfolio/interior-1.jpg',
-        '/portfolio/interior-2.jpg',
-        '/portfolio/aerial-1.jpg'
-      ]
-    },
-    {
-      name: 'Sofia R.',
-      title: 'Interior Design Visualizer',
-      location: 'Barcelona, Spain',
-      description: 'Expert in creating warm, inviting interior renders that capture emotion. Specializing in residential interiors, hospitality design, and commercial spaces with attention to lighting and materials.',
-      skills: ['Blender', 'Lumion', 'Photoshop'],
-      portfolio: [
-        '/portfolio/interior-3.jpg',
-        '/portfolio/interior-4.jpg',
-        '/portfolio/interior-5.jpg',
-        '/portfolio/interior-6.jpg',
-        '/portfolio/commercial-4.jpg',
-        '/portfolio/exterior-4.jpg'
-      ]
-    },
-    {
-      name: 'Marco T.',
-      title: 'Commercial & Aerial Specialist',
-      location: 'Milan, Italy',
-      description: 'Focused on large-scale commercial projects and master planning. Creating comprehensive aerial views, site context renders, and development visualizations for architects and developers.',
-      skills: ['SketchUp', 'Enscape', 'Twinmotion'],
-      portfolio: [
-        '/portfolio/aerial-2.jpg',
-        '/portfolio/aerial-3.jpg',
-        '/portfolio/commercial-1.jpg',
-        '/portfolio/commercial-2.jpg',
-        '/portfolio/commercial-3.jpg',
-        '/portfolio/aerial-4.jpg'
-      ]
-    },
-    {
-      name: 'Ana K.',
-      title: 'Animation & Walkthrough Artist',
-      location: 'London, UK',
-      description: 'Bringing projects to life through cinematic animations and virtual tours. Expert in creating compelling walkthroughs that let clients experience spaces before construction begins.',
-      skills: ['Unreal Engine', 'Cinema 4D', 'After Effects'],
-      portfolio: [
-        '/portfolio/exterior-5.jpg',
-        '/portfolio/interior-1.jpg',
-        '/portfolio/commercial-5.jpg',
-        '/portfolio/exterior-6.jpg',
-        '/portfolio/interior-3.jpg',
-        '/portfolio/aerial-5.jpg'
-      ]
-    }
-  ];
+  // Use Sanity featured artists or fallback
+  const featuredArtists: FeaturedArtist[] = sanityData?.featuredArtists?.length
+    ? sanityData.featuredArtists.map((artist) => ({
+        name: artist.name,
+        title: artist.title,
+        location: artist.location,
+        description: artist.description,
+        skills: artist.skills,
+        portfolio: artist.portfolioImages.map((img) => urlFor(img).width(400).height(300).url()),
+      }))
+    : [
+        {
+          name: 'Lucas M.',
+          title: '3D Architectural Visualizer',
+          location: 'São Paulo, Brazil',
+          description: 'Specialized in photorealistic exterior renders and luxury residential projects. 8+ years creating stunning visualizations that help clients sell properties faster.',
+          skills: ['3ds Max', 'V-Ray', 'Corona Renderer'],
+          portfolio: [
+            '/portfolio/exterior-1.jpg',
+            '/portfolio/exterior-2.jpg',
+            '/portfolio/exterior-3.jpg',
+            '/portfolio/interior-1.jpg',
+            '/portfolio/interior-2.jpg',
+            '/portfolio/aerial-1.jpg'
+          ]
+        },
+        {
+          name: 'Sofia R.',
+          title: 'Interior Design Visualizer',
+          location: 'Barcelona, Spain',
+          description: 'Expert in creating warm, inviting interior renders that capture emotion. Specializing in residential interiors, hospitality design, and commercial spaces with attention to lighting and materials.',
+          skills: ['Blender', 'Lumion', 'Photoshop'],
+          portfolio: [
+            '/portfolio/interior-3.jpg',
+            '/portfolio/interior-4.jpg',
+            '/portfolio/interior-5.jpg',
+            '/portfolio/interior-6.jpg',
+            '/portfolio/commercial-4.jpg',
+            '/portfolio/exterior-4.jpg'
+          ]
+        },
+        {
+          name: 'Marco T.',
+          title: 'Commercial & Aerial Specialist',
+          location: 'Milan, Italy',
+          description: 'Focused on large-scale commercial projects and master planning. Creating comprehensive aerial views, site context renders, and development visualizations for architects and developers.',
+          skills: ['SketchUp', 'Enscape', 'Twinmotion'],
+          portfolio: [
+            '/portfolio/aerial-2.jpg',
+            '/portfolio/aerial-3.jpg',
+            '/portfolio/commercial-1.jpg',
+            '/portfolio/commercial-2.jpg',
+            '/portfolio/commercial-3.jpg',
+            '/portfolio/aerial-4.jpg'
+          ]
+        },
+        {
+          name: 'Ana K.',
+          title: 'Animation & Walkthrough Artist',
+          location: 'London, UK',
+          description: 'Bringing projects to life through cinematic animations and virtual tours. Expert in creating compelling walkthroughs that let clients experience spaces before construction begins.',
+          skills: ['Unreal Engine', 'Cinema 4D', 'After Effects'],
+          portfolio: [
+            '/portfolio/exterior-5.jpg',
+            '/portfolio/interior-1.jpg',
+            '/portfolio/commercial-5.jpg',
+            '/portfolio/exterior-6.jpg',
+            '/portfolio/interior-3.jpg',
+            '/portfolio/aerial-5.jpg'
+          ]
+        }
+      ];
 
   const nextArtist = () => {
     setCurrentArtistSlide((prev) => (prev + 1) % featuredArtists.length);
@@ -183,56 +251,45 @@ const LandingPage = () => {
     setCurrentArtistSlide((prev) => (prev - 1 + featuredArtists.length) % featuredArtists.length);
   };
 
-  const platformFeatures: PlatformFeature[] = [
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="3" y1="9" x2="21" y2="9"></line>
-          <line x1="9" y1="21" x2="9" y2="9"></line>
-        </svg>
-      ),
-      title: 'Your workspace for architectural visualization',
-      description: 'Manage everything in one place. Browse vetted 3d artists, collaborate in real-time, track project milestones, and approve deliveries.',
-      image: '/platform-demo.gif',
-      alt: '3dMatch Platform Dashboard'
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      ),
-      title: 'Only work with approved talent',
-      description: 'Every 3D artist on 3dMatch is manually reviewed and approved. We verify portfolios, check references, and test architectural accuracy before any artist can join the platform.',
-      image: '/benefit-approved-talent.png',
-      alt: 'Approved Artist Verification'
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-      ),
-      title: 'Pay with confidence',
-      description: 'Your payment is held securely until you approve each delivery. No surprises, no unexpected charges. Release funds only when you are completely satisfied with the work.',
-      image: '/benefit-secure-payment.png',
-      alt: 'Secure Payment System'
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
-      ),
-      title: 'Stay in control at every stage',
-      description: 'Define project scopes, set clear milestones, review progress at each step, and approve deliveries before moving forward. Your project, your timeline, your standards.',
-      image: '/benefit-project-control.png',
-      alt: 'Project Control Dashboard'
-    }
-  ];
+  // Use Sanity platform features or fallback
+  const platformFeatures: PlatformFeature[] = sanityData?.platformFeatures?.length
+    ? sanityData.platformFeatures.map((feature) => ({
+        icon: getFeatureIcon(feature.icon),
+        title: feature.title,
+        description: feature.description,
+        image: urlFor(feature.image).width(800).url(),
+        alt: feature.alt,
+      }))
+    : [
+        {
+          icon: getFeatureIcon('dashboard'),
+          title: 'Your workspace for architectural visualization',
+          description: 'Manage everything in one place. Browse vetted 3d artists, collaborate in real-time, track project milestones, and approve deliveries.',
+          image: '/platform-demo.gif',
+          alt: '3dMatch Platform Dashboard'
+        },
+        {
+          icon: getFeatureIcon('checkmark'),
+          title: 'Only work with approved talent',
+          description: 'Every 3D artist on 3dMatch is manually reviewed and approved. We verify portfolios, check references, and test architectural accuracy before any artist can join the platform.',
+          image: '/benefit-approved-talent.png',
+          alt: 'Approved Artist Verification'
+        },
+        {
+          icon: getFeatureIcon('lock'),
+          title: 'Pay with confidence',
+          description: 'Your payment is held securely until you approve each delivery. No surprises, no unexpected charges. Release funds only when you are completely satisfied with the work.',
+          image: '/benefit-secure-payment.png',
+          alt: 'Secure Payment System'
+        },
+        {
+          icon: getFeatureIcon('lightning'),
+          title: 'Stay in control at every stage',
+          description: 'Define project scopes, set clear milestones, review progress at each step, and approve deliveries before moving forward. Your project, your timeline, your standards.',
+          image: '/benefit-project-control.png',
+          alt: 'Project Control Dashboard'
+        }
+      ];
 
   // Handle scroll to change header background and text color based on section
   useEffect(() => {
@@ -354,7 +411,7 @@ const LandingPage = () => {
           )}
 
           {/* Attribution */}
-          <p className="hero-attribution">Render created by a 3dMatch artist.</p>
+          <p className="hero-attribution">{heroAttribution}</p>
         </div>
       </section>
 
@@ -742,32 +799,38 @@ const LandingPage = () => {
           <h2 className="section-title">Frequently Asked Questions</h2>
 
           <div className="faq-container">
-            {([
-              {
-                question: "How many render rounds can I get?",
-                answer: "You decide with your artist! Most projects include 3 revision rounds as a starting point. If you need more revisions, you can purchase additional rounds directly through the platform with a simple payment. This gives you complete flexibility to get the perfect result."
-              },
-              {
-                question: "What if I don't love the render result?",
-                answer: "You only release payment when you approve each delivery. If a render doesn't meet your expectations, request revisions until it's right. Your payment is held securely until you're completely satisfied with the work. Need more rounds? Simply purchase additional revisions anytime."
-              },
-              {
-                question: "How do I know the artists are qualified?",
-                answer: "Every 3D artist on 3dMatch is manually reviewed and approved by our team. We verify portfolios, check references, and test architectural accuracy before any artist can join. You can browse each artist's complete portfolio, view their previous renders, check their style, and compare timelines and budgets to choose the perfect match for your project."
-              },
-              {
-                question: "Can I see the artist's previous work before hiring?",
-                answer: "Absolutely! Each artist has a detailed portfolio showcasing their previous renders. You can browse their work, see their specialties, and read reviews from other clients before making your decision."
-              },
-              {
-                question: "How long does it take to get renders?",
-                answer: "Timeline depends on project complexity and scope. Artists provide delivery estimates in their proposals. Typical timelines range from a few days for simple renders to several weeks for complex animations or large projects."
-              },
-              {
-                question: "What types of renders can I request?",
-                answer: "Everything from still images to animations, 360° virtual tours, exterior and interior views, aerial perspectives, day and night renders, and more. If you can envision it, our artists can create it."
-              }
-            ] as FaqItem[]).map((faq, index) => (
+            {(sanityData?.faqItems?.length
+              ? sanityData.faqItems.map((faq) => ({
+                  question: faq.question,
+                  answer: faq.answer,
+                }))
+              : [
+                  {
+                    question: "How many render rounds can I get?",
+                    answer: "You decide with your artist! Most projects include 3 revision rounds as a starting point. If you need more revisions, you can purchase additional rounds directly through the platform with a simple payment. This gives you complete flexibility to get the perfect result."
+                  },
+                  {
+                    question: "What if I don't love the render result?",
+                    answer: "You only release payment when you approve each delivery. If a render doesn't meet your expectations, request revisions until it's right. Your payment is held securely until you're completely satisfied with the work. Need more rounds? Simply purchase additional revisions anytime."
+                  },
+                  {
+                    question: "How do I know the artists are qualified?",
+                    answer: "Every 3D artist on 3dMatch is manually reviewed and approved by our team. We verify portfolios, check references, and test architectural accuracy before any artist can join. You can browse each artist's complete portfolio, view their previous renders, check their style, and compare timelines and budgets to choose the perfect match for your project."
+                  },
+                  {
+                    question: "Can I see the artist's previous work before hiring?",
+                    answer: "Absolutely! Each artist has a detailed portfolio showcasing their previous renders. You can browse their work, see their specialties, and read reviews from other clients before making your decision."
+                  },
+                  {
+                    question: "How long does it take to get renders?",
+                    answer: "Timeline depends on project complexity and scope. Artists provide delivery estimates in their proposals. Typical timelines range from a few days for simple renders to several weeks for complex animations or large projects."
+                  },
+                  {
+                    question: "What types of renders can I request?",
+                    answer: "Everything from still images to animations, 360° virtual tours, exterior and interior views, aerial perspectives, day and night renders, and more. If you can envision it, our artists can create it."
+                  }
+                ]
+            ).map((faq, index) => (
               <div key={index} className={`faq-item ${openFaqIndex === index ? 'open' : ''}`}>
                 <button className="faq-question" onClick={() => toggleFaq(index)}>
                   <span>{faq.question}</span>
@@ -798,12 +861,14 @@ const LandingPage = () => {
       {/* Final CTA Section */}
       <section className="final-cta-section">
         <div className="section-wrapper">
-          <h2 className="final-cta-title">Ready to Bring Your Vision to Life?</h2>
+          <h2 className="final-cta-title">
+            {sanityData?.settings?.finalCtaTitle || 'Ready to Bring Your Vision to Life?'}
+          </h2>
           <p className="final-cta-subtitle">
-            Join property and design professionals worldwide who trust 3dMatch for high-end architectural visualization.
+            {sanityData?.settings?.finalCtaSubtitle || 'Join property and design professionals worldwide who trust 3dMatch for high-end architectural visualization.'}
           </p>
           <Link href="/login/property" className="btn-cta-primary btn-cta-large">
-            Start Selling With Stunning Renders
+            {sanityData?.settings?.finalCtaButton || 'Start Selling With Stunning Renders'}
           </Link>
         </div>
       </section>
