@@ -1,11 +1,20 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { createStaticClient } from '@/lib/supabase/client'
+import { client } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
 import BlogPostClient from './BlogPostClient'
 
 // Revalidate every 5 minutes for ISR
 export const revalidate = 300
+
+interface SanityPost {
+  _id: string
+  title: string
+  slug: { current: string }
+  publishedAt: string
+  image?: { asset: { _ref: string } }
+  body?: Array<{ _type: string; children?: Array<{ text: string }> }>
+}
 
 interface BlogPostData {
   id: string
@@ -16,50 +25,53 @@ interface BlogPostData {
   featured_image?: string
   published_at: string
   reading_time?: number
-  views_count: number
-  seo_title?: string
-  seo_description?: string
-  seo_keywords?: string
-  author?: { full_name: string; profile_photo?: string }
-  blog_post_categories?: { category: { id: string; name: string; slug: string } }[]
-  blog_post_tags?: { tag: { id: string; name: string; slug: string } }[]
-}
-
-interface RelatedPost {
-  id: string
-  title: string
-  slug: string
-  excerpt?: string
-  featured_image?: string
 }
 
 interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-// Generate static params for pre-rendering popular posts
-// Returns empty array if env vars unavailable (falls back to dynamic rendering)
+// Convert portable text to HTML
+function portableTextToHtml(body?: SanityPost['body']): string {
+  if (!body) return ''
+  return body
+    .filter(block => block._type === 'block')
+    .map(block => {
+      const text = block.children?.map(child => child.text).join('') || ''
+      return `<p>${text}</p>`
+    })
+    .join('\n')
+}
+
+// Extract text excerpt from portable text body
+function getExcerpt(body?: SanityPost['body'], maxLength = 160): string {
+  if (!body) return ''
+  const text = body
+    .filter(block => block._type === 'block')
+    .flatMap(block => block.children?.map(child => child.text) || [])
+    .join(' ')
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+}
+
+// Estimate reading time based on word count
+function getReadingTime(body?: SanityPost['body']): number {
+  if (!body) return 1
+  const text = body
+    .filter(block => block._type === 'block')
+    .flatMap(block => block.children?.map(child => child.text) || [])
+    .join(' ')
+  const wordCount = text.split(/\s+/).length
+  return Math.max(1, Math.ceil(wordCount / 200))
+}
+
+// Generate static params for pre-rendering posts
 export async function generateStaticParams() {
-  // Skip static generation if Supabase env vars aren't available at build time
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return []
-  }
-
   try {
-    const supabase = createStaticClient()
-
-    const { data: posts } = await supabase
-      .from('blog_posts')
-      .select('slug')
-      .eq('status', 'published')
-      .order('views_count', { ascending: false })
-      .limit(10)
-
-    return (posts || []).map((post) => ({
-      slug: post.slug,
-    }))
+    const posts = await client.fetch<{ slug: { current: string } }[]>(
+      `*[_type == "post"][0...20] { slug }`
+    )
+    return posts.map(post => ({ slug: post.slug.current }))
   } catch {
-    // If anything fails, fall back to dynamic rendering
     return []
   }
 }
@@ -67,69 +79,72 @@ export async function generateStaticParams() {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
 
-  const { data: post } = await supabase
-    .from('blog_posts')
-    .select('title, excerpt, seo_title, seo_description, seo_keywords, featured_image')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .single()
+  const post = await client.fetch<SanityPost | null>(
+    `*[_type == "post" && slug.current == $slug][0] {
+      _id,
+      title,
+      slug,
+      image,
+      body
+    }`,
+    { slug }
+  )
 
   if (!post) {
     return { title: 'Post Not Found' }
   }
 
+  const excerpt = getExcerpt(post.body)
+  const imageUrl = post.image ? urlFor(post.image).width(1200).url() : undefined
+
   return {
-    title: post.seo_title || post.title,
-    description: post.seo_description || post.excerpt || `Read ${post.title} on 3dMatch Blog`,
-    keywords: post.seo_keywords,
+    title: post.title,
+    description: excerpt || `Read ${post.title} on 3dMatch Blog`,
     openGraph: {
-      title: post.seo_title || post.title,
-      description: post.seo_description || post.excerpt,
-      images: post.featured_image ? [post.featured_image] : [],
+      title: post.title,
+      description: excerpt,
+      images: imageUrl ? [imageUrl] : [],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.seo_title || post.title,
-      description: post.seo_description || post.excerpt,
-      images: post.featured_image ? [post.featured_image] : [],
+      title: post.title,
+      description: excerpt,
+      images: imageUrl ? [imageUrl] : [],
     },
   }
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params
-  const supabase = await createClient()
 
-  // Fetch main post
-  const { data: post, error } = await supabase
-    .from('blog_posts')
-    .select(`*, author:profiles(full_name, profile_photo), blog_post_categories(category:blog_categories(id, name, slug)), blog_post_tags(tag:blog_tags(id, name, slug))`)
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .single()
+  const post = await client.fetch<SanityPost | null>(
+    `*[_type == "post" && slug.current == $slug][0] {
+      _id,
+      title,
+      slug,
+      publishedAt,
+      image,
+      body
+    }`,
+    { slug }
+  )
 
-  if (error || !post) {
+  if (!post) {
     notFound()
   }
 
-  // Fetch related posts
-  let relatedPosts: RelatedPost[] = []
-  if (post.blog_post_categories?.[0]?.category?.id) {
-    const { data: related } = await supabase
-      .from('blog_posts')
-      .select(`id, title, slug, excerpt, featured_image, blog_post_categories!inner(category_id)`)
-      .eq('blog_post_categories.category_id', post.blog_post_categories[0].category.id)
-      .eq('status', 'published')
-      .neq('id', post.id)
-      .limit(3)
-
-    if (related) {
-      relatedPosts = related as unknown as RelatedPost[]
-    }
+  const formattedPost: BlogPostData = {
+    id: post._id,
+    title: post.title,
+    slug: post.slug.current,
+    content: portableTextToHtml(post.body),
+    excerpt: getExcerpt(post.body),
+    featured_image: post.image ? urlFor(post.image).width(1200).url() : undefined,
+    published_at: post.publishedAt,
+    reading_time: getReadingTime(post.body),
   }
 
-  return <BlogPostClient post={post as unknown as BlogPostData} relatedPosts={relatedPosts} />
+  return <BlogPostClient post={formattedPost} />
 }

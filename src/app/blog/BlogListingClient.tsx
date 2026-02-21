@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Calendar, Clock, User, Search, Tag } from 'lucide-react'
+import { Calendar, Clock, Search } from 'lucide-react'
 import PublicLayout from '@/components/layout/PublicLayout'
 
 interface BlogPost {
@@ -13,8 +13,6 @@ interface BlogPost {
   featured_image?: string
   published_at: string
   reading_time?: number
-  author?: { full_name: string }
-  blog_post_tags?: { tag: { name: string; slug: string } }[]
 }
 
 interface BlogListingClientProps {
@@ -65,7 +63,6 @@ export default function BlogListingClient({ initialPosts }: BlogListingClientPro
                   </div>
                   <h2 className="featured-post-title">{featuredPost.title}</h2>
                   {featuredPost.excerpt && <p className="featured-post-excerpt">{featuredPost.excerpt}</p>}
-                  <div className="post-author"><User size={16} /><span>By {featuredPost.author?.full_name || 'Anonymous'}</span></div>
                 </div>
               </Link>
             )}
@@ -79,15 +76,9 @@ export default function BlogListingClient({ initialPosts }: BlogListingClientPro
                       <div className="post-meta"><span className="post-date"><Calendar size={12} /> {formatDate(post.published_at)}</span></div>
                       <h3 className="post-card-title">{post.title}</h3>
                       {post.excerpt && <p className="post-card-excerpt">{post.excerpt}</p>}
-                      <div className="post-footer">
-                        <span className="post-author">{post.author?.full_name || 'Anonymous'}</span>
-                        {post.reading_time && <span className="post-reading-time">{post.reading_time} min read</span>}
-                      </div>
-                      {post.blog_post_tags && post.blog_post_tags.length > 0 && (
-                        <div className="post-tags">
-                          {post.blog_post_tags.slice(0, 3).map((pt, index) => (
-                            <span key={index} className="post-tag"><Tag size={12} /> {pt.tag?.name}</span>
-                          ))}
+                      {post.reading_time && (
+                        <div className="post-footer">
+                          <span className="post-reading-time">{post.reading_time} min read</span>
                         </div>
                       )}
                     </div>
