@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import type { HomepageData } from '../../../sanity/lib/types';
-import { urlFor } from '../../../sanity/lib/client';
 
 interface PortfolioProject {
   image: string;
@@ -38,7 +36,7 @@ interface FaqItem {
 }
 
 interface LandingPageProps {
-  sanityData?: HomepageData | null;
+  // Props can be added here when CMS is integrated
 }
 
 // Icon components for platform features
@@ -77,23 +75,21 @@ const getFeatureIcon = (iconType: string) => {
   }
 };
 
-const LandingPage = ({ sanityData }: LandingPageProps) => {
+const LandingPage = ({}: LandingPageProps) => {
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState<number>(0);
 
-  // Use Sanity hero images or fallback to static images
-  const backgroundImages: string[] = sanityData?.heroImages?.length
-    ? sanityData.heroImages.map((img) => urlFor(img.image).width(1920).quality(85).url())
-    : [
-        '/bg-img-1.png',
-        '/bg-img-2.png',
-        '/bg-img-3.png',
-        '/bg-img-4.png',
-        '/bg-img-5.png',
-      ];
+  // Static hero images
+  const backgroundImages: string[] = [
+    '/bg-img-1.png',
+    '/bg-img-2.png',
+    '/bg-img-3.png',
+    '/bg-img-4.png',
+    '/bg-img-5.png',
+  ];
 
-  // Hero attribution from Sanity or fallback
-  const heroAttribution = sanityData?.settings?.heroAttribution || 'Render created by a 3dMatch artist.';
+  // Hero attribution
+  const heroAttribution = 'Render created by a 3dMatch artist.';
 
   // Header scroll state
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -114,16 +110,8 @@ const LandingPage = ({ sanityData }: LandingPageProps) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
-  // Use Sanity portfolio data or fallback
-  const portfolioCategories: PortfolioCategory[] = sanityData?.portfolioCategories?.length
-    ? sanityData.portfolioCategories.map((cat) => ({
-        name: cat.name,
-        projects: cat.projects.map((proj) => ({
-          image: urlFor(proj.image).width(600).height(400).url(),
-          title: proj.title,
-        })),
-      }))
-    : [
+  // Portfolio data
+  const portfolioCategories: PortfolioCategory[] = [
         {
           name: 'Exterior Residential',
           projects: [
@@ -170,17 +158,8 @@ const LandingPage = ({ sanityData }: LandingPageProps) => {
         }
       ];
 
-  // Use Sanity featured artists or fallback
-  const featuredArtists: FeaturedArtist[] = sanityData?.featuredArtists?.length
-    ? sanityData.featuredArtists.map((artist) => ({
-        name: artist.name,
-        title: artist.title,
-        location: artist.location,
-        description: artist.description,
-        skills: artist.skills,
-        portfolio: artist.portfolioImages.map((img) => urlFor(img).width(400).height(300).url()),
-      }))
-    : [
+  // Featured artists data
+  const featuredArtists: FeaturedArtist[] = [
         {
           name: 'Lucas M.',
           title: '3D Architectural Visualizer',
@@ -251,16 +230,8 @@ const LandingPage = ({ sanityData }: LandingPageProps) => {
     setCurrentArtistSlide((prev) => (prev - 1 + featuredArtists.length) % featuredArtists.length);
   };
 
-  // Use Sanity platform features or fallback
-  const platformFeatures: PlatformFeature[] = sanityData?.platformFeatures?.length
-    ? sanityData.platformFeatures.map((feature) => ({
-        icon: getFeatureIcon(feature.icon),
-        title: feature.title,
-        description: feature.description,
-        image: urlFor(feature.image).width(800).url(),
-        alt: feature.alt,
-      }))
-    : [
+  // Platform features data
+  const platformFeatures: PlatformFeature[] = [
         {
           icon: getFeatureIcon('dashboard'),
           title: 'Your workspace for architectural visualization',
@@ -799,12 +770,7 @@ const LandingPage = ({ sanityData }: LandingPageProps) => {
           <h2 className="section-title">Frequently Asked Questions</h2>
 
           <div className="faq-container">
-            {(sanityData?.faqItems?.length
-              ? sanityData.faqItems.map((faq) => ({
-                  question: faq.question,
-                  answer: faq.answer,
-                }))
-              : [
+            {([
                   {
                     question: "How many render rounds can I get?",
                     answer: "You decide with your artist! Most projects include 3 revision rounds as a starting point. If you need more revisions, you can purchase additional rounds directly through the platform with a simple payment. This gives you complete flexibility to get the perfect result."
@@ -862,13 +828,13 @@ const LandingPage = ({ sanityData }: LandingPageProps) => {
       <section className="final-cta-section">
         <div className="section-wrapper">
           <h2 className="final-cta-title">
-            {sanityData?.settings?.finalCtaTitle || 'Ready to Bring Your Vision to Life?'}
+            Ready to Bring Your Vision to Life?
           </h2>
           <p className="final-cta-subtitle">
-            {sanityData?.settings?.finalCtaSubtitle || 'Join property and design professionals worldwide who trust 3dMatch for high-end architectural visualization.'}
+            Join property and design professionals worldwide who trust 3dMatch for high-end architectural visualization.
           </p>
           <Link href="/login/property" className="btn-cta-primary btn-cta-large">
-            {sanityData?.settings?.finalCtaButton || 'Start Selling With Stunning Renders'}
+            Start Selling With Stunning Renders
           </Link>
         </div>
       </section>

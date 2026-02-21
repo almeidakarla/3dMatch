@@ -12,21 +12,7 @@
  */
 
 import LandingPage from '@/components/landing/LandingPage'
-import { getHomepageData } from '../../sanity/lib/fetch'
 
-export const revalidate = 60 // Revalidate every minute
-
-export default async function HomePage() {
-  // Fetch homepage data from Sanity (with fallback if not configured)
-  let homepageData = null
-
-  try {
-    if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
-      homepageData = await getHomepageData()
-    }
-  } catch (error) {
-    console.error('Failed to fetch homepage data from Sanity:', error)
-  }
-
-  return <LandingPage sanityData={homepageData} />
+export default function HomePage() {
+  return <LandingPage />
 }
