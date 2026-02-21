@@ -1,38 +1,34 @@
-import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { client } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
-import BlogPostClient from './BlogPostClient'
+import Link from 'next/link'
+import PublicLayout from '@/components/layout/PublicLayout'
 
-// Revalidate every 5 minutes for ISR
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
-interface SanityPost {
+const SANITY_PROJECT_ID = '9lvs5sql'
+const SANITY_DATASET = 'production'
+
+interface Post {
   _id: string
   title: string
   slug: { current: string }
   publishedAt: string
-  image?: { asset: { _ref: string } }
-  body?: Array<{ _type: string; children?: Array<{ text: string }> }>
+  image?: {
+    asset: {
+      _ref: string
+    }
+  }
+  body?: Array<{
+    _type: string
+    children?: Array<{ text: string }>
+  }>
 }
 
-interface BlogPostData {
-  id: string
-  title: string
-  slug: string
-  content: string
-  excerpt?: string
-  featured_image?: string
-  published_at: string
-  reading_time?: number
+function getImageUrl(ref: string): string {
+  const [, id, dimensions, format] = ref.split('-')
+  return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dimensions}.${format}`
 }
 
-interface PageProps {
-  params: Promise<{ slug: string }>
-}
-
-// Convert portable text to HTML
-function portableTextToHtml(body?: SanityPost['body']): string {
+function renderBody(body?: Post['body']): string {
   if (!body) return ''
   return body
     .filter(block => block._type === 'block')
@@ -40,111 +36,62 @@ function portableTextToHtml(body?: SanityPost['body']): string {
       const text = block.children?.map(child => child.text).join('') || ''
       return `<p>${text}</p>`
     })
-    .join('\n')
+    .join('')
 }
 
-// Extract text excerpt from portable text body
-function getExcerpt(body?: SanityPost['body'], maxLength = 160): string {
-  if (!body) return ''
-  const text = body
-    .filter(block => block._type === 'block')
-    .flatMap(block => block.children?.map(child => child.text) || [])
-    .join(' ')
-  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
-}
+async function getPost(slug: string): Promise<Post | null> {
+  const query = encodeURIComponent(`*[_type == "post" && slug.current == "${slug}"][0] { _id, title, slug, publishedAt, image, body }`)
+  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${query}`
 
-// Estimate reading time based on word count
-function getReadingTime(body?: SanityPost['body']): number {
-  if (!body) return 1
-  const text = body
-    .filter(block => block._type === 'block')
-    .flatMap(block => block.children?.map(child => child.text) || [])
-    .join(' ')
-  const wordCount = text.split(/\s+/).length
-  return Math.max(1, Math.ceil(wordCount / 200))
-}
+  const res = await fetch(url, { cache: 'no-store' })
 
-// Generate static params for pre-rendering posts
-export async function generateStaticParams() {
-  try {
-    const posts = await client.fetch<{ slug: { current: string } }[]>(
-      `*[_type == "post"][0...20] { slug }`
-    )
-    return posts.map(post => ({ slug: post.slug.current }))
-  } catch {
-    return []
+  if (!res.ok) {
+    return null
   }
+
+  const data = await res.json()
+  return data.result || null
 }
 
-// Generate metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-
-  const post = await client.fetch<SanityPost | null>(
-    `*[_type == "post" && slug.current == $slug][0] {
-      _id,
-      title,
-      slug,
-      image,
-      body
-    }`,
-    { slug }
-  )
-
-  if (!post) {
-    return { title: 'Post Not Found' }
-  }
-
-  const excerpt = getExcerpt(post.body)
-  const imageUrl = post.image ? urlFor(post.image).width(1200).url() : undefined
-
-  return {
-    title: post.title,
-    description: excerpt || `Read ${post.title} on 3dMatch Blog`,
-    openGraph: {
-      title: post.title,
-      description: excerpt,
-      images: imageUrl ? [imageUrl] : [],
-      type: 'article',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: excerpt,
-      images: imageUrl ? [imageUrl] : [],
-    },
-  }
-}
-
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await params
-
-  const post = await client.fetch<SanityPost | null>(
-    `*[_type == "post" && slug.current == $slug][0] {
-      _id,
-      title,
-      slug,
-      publishedAt,
-      image,
-      body
-    }`,
-    { slug }
-  )
+  const post = await getPost(slug)
 
   if (!post) {
     notFound()
   }
 
-  const formattedPost: BlogPostData = {
-    id: post._id,
-    title: post.title,
-    slug: post.slug.current,
-    content: portableTextToHtml(post.body),
-    excerpt: getExcerpt(post.body),
-    featured_image: post.image ? urlFor(post.image).width(1200).url() : undefined,
-    published_at: post.publishedAt,
-    reading_time: getReadingTime(post.body),
-  }
+  return (
+    <PublicLayout>
+      <div className="blog-post-container">
+        <Link href="/blog" className="btn-back">
+          ← Back to Blog
+        </Link>
 
-  return <BlogPostClient post={formattedPost} />
+        <article className="blog-post">
+          <header className="post-header">
+            <h1 className="post-title">{post.title}</h1>
+            <p className="post-date">
+              {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </p>
+          </header>
+
+          {post.image?.asset?._ref && (
+            <div className="post-featured-image">
+              <img src={getImageUrl(post.image.asset._ref)} alt={post.title} />
+            </div>
+          )}
+
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{ __html: renderBody(post.body) }}
+          />
+        </article>
+      </div>
+    </PublicLayout>
+  )
 }

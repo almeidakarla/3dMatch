@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "createdAt": "2026-02-21T13:49:12.191Z",
+  "workspaces": [
+    {
+      "name": "default",
+      "title": "3DMatch",
+      "basePath": "/",
+      "projectId": "9lvs5sql",
+      "dataset": "production",
+      "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"2\" fill=\"#ccb1fc\"></rect><text x=\"50%\" y=\"50%\" text-anchor=\"middle\" alignment-baseline=\"middle\" fill=\"hsla(262, 93%, 44%, 1)\" style=\"font-family:Inter, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, &quot;Liberation Sans&quot;, Helvetica, Arial, system-ui, sans-serif;font-weight:500;font-size:13px;transform:translateY(1px)\">3</text></svg>",
+      "mediaLibrary": {
+        "enabled": false,
+        "__internal": {}
+      },
+      "schema": "00b0392f.create-schema.json",
+      "tools": "ba47da56.create-tools.json"
+    }
+  ],
+  "studioVersion": "5.11.0"
+}
