@@ -1,9 +1,11 @@
-import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import BlogListingClient from './BlogListingClient'
 
 // Force dynamic rendering to avoid caching issues
 export const dynamic = 'force-dynamic'
+
+const SANITY_PROJECT_ID = '9lvs5sql'
+const SANITY_DATASET = 'production'
 
 interface SanityPost {
   _id: string
@@ -46,26 +48,45 @@ function getReadingTime(body?: SanityPost['body']): number {
 }
 
 export default async function BlogListingPage() {
-  const posts = await client.fetch<SanityPost[]>(
-    `*[_type == "post"] | order(publishedAt desc)[0...20] {
+  let formattedPosts: BlogPost[] = []
+
+  try {
+    const query = encodeURIComponent(`*[_type == "post"] | order(publishedAt desc)[0...20] {
       _id,
       title,
       slug,
       publishedAt,
       image,
       body
-    }`
-  )
+    }`)
 
-  const formattedPosts: BlogPost[] = posts.map(post => ({
-    id: post._id,
-    title: post.title,
-    slug: post.slug.current,
-    excerpt: getExcerpt(post.body),
-    featured_image: post.image ? urlFor(post.image).width(800).url() : undefined,
-    published_at: post.publishedAt,
-    reading_time: getReadingTime(post.body),
-  }))
+    const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${query}`
+
+    const response = await fetch(url, {
+      next: { revalidate: 0 }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Sanity API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    const posts: SanityPost[] = data.result || []
+
+    if (posts.length > 0) {
+      formattedPosts = posts.map(post => ({
+        id: post._id,
+        title: post.title,
+        slug: post.slug?.current || '',
+        excerpt: getExcerpt(post.body),
+        featured_image: post.image ? urlFor(post.image).width(800).url() : undefined,
+        published_at: post.publishedAt,
+        reading_time: getReadingTime(post.body),
+      }))
+    }
+  } catch (e) {
+    console.error('Error fetching Sanity posts:', e)
+  }
 
   return <BlogListingClient initialPosts={formattedPosts} />
 }
