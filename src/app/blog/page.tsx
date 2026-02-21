@@ -2,8 +2,8 @@ import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import BlogListingClient from './BlogListingClient'
 
-// Revalidate every 5 minutes for ISR
-export const revalidate = 300
+// Force dynamic rendering to avoid caching issues
+export const dynamic = 'force-dynamic'
 
 interface SanityPost {
   _id: string
