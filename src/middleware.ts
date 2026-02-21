@@ -2,20 +2,22 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 /**
- * PROXY — runs BEFORE every matched request (renamed from middleware in Next.js 16)
+ * Middleware — runs BEFORE every matched request
  *
- * Why do we need proxy for auth?
- * 1. Supabase auth tokens expire. The proxy refreshes them on every request
+ * Why do we need middleware for auth?
+ * 1. Supabase auth tokens expire. The middleware refreshes them on every request
  *    so the user doesn't get randomly logged out.
  * 2. It runs before Server Components render, so by the time your page loads,
  *    the auth cookie is always fresh.
  * 3. It can redirect unauthenticated users away from /dashboard/* routes
  *    before the page even starts rendering (faster than client-side redirects).
- *
- * Old CRA approach: AuthContext checked localStorage on mount, showed loading spinner
- * New Next.js approach: Proxy refreshes cookie before page renders — no spinner needed
  */
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  // Skip middleware for studio routes - let Sanity handle its own auth
+  if (request.nextUrl.pathname.startsWith('/studio')) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -76,7 +78,7 @@ export async function proxy(request: NextRequest) {
 }
 
 /**
- * Matcher config: which routes should the proxy run on?
+ * Matcher config: which routes should the middleware run on?
  *
  * We exclude:
  * - _next/static (static files)
@@ -84,10 +86,10 @@ export async function proxy(request: NextRequest) {
  * - favicon.ico
  * - Public assets
  *
- * Everything else goes through proxy to keep auth cookies fresh.
+ * Everything else goes through middleware to keep auth cookies fresh.
  */
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|studio|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
