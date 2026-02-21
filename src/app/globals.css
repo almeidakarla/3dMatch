@@ -694,7 +694,8 @@ body.dark-mode label {
   color: var(--color-text-primary);
   text-align: center;
   margin: 0 auto var(--spacing-5xl);
-  max-width: 600px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .section-subtitle {
