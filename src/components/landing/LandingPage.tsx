@@ -299,9 +299,6 @@ const LandingPage = ({ data }: LandingPageProps) => {
   // Platform features tabs state
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  // Portfolio showcase tabs state
-  const [activePortfolioTab, setActivePortfolioTab] = useState<number>(0);
-
   // Artist carousel state
   const [currentArtistSlide, setCurrentArtistSlide] = useState<number>(0);
 
@@ -313,10 +310,6 @@ const LandingPage = ({ data }: LandingPageProps) => {
   };
 
   // Get content with fallbacks
-  const portfolioCategories = content.portfolioCategories && content.portfolioCategories.length > 0
-    ? content.portfolioCategories
-    : defaultData.portfolioCategories!;
-
   const featuredArtists = content.featuredArtists && content.featuredArtists.length > 0
     ? content.featuredArtists
     : defaultData.featuredArtists!;
@@ -598,43 +591,6 @@ const LandingPage = ({ data }: LandingPageProps) => {
                 key={activeTab}
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Portfolio Showcase Section */}
-      <section className="portfolio-section">
-        <div className="section-wrapper">
-          <h2 className="section-title">{content.portfolioTitle}</h2>
-          <p className="section-subtitle">
-            {content.portfolioSubtitle}
-          </p>
-
-          {/* Portfolio Category Tabs */}
-          <div className="portfolio-tabs">
-            {portfolioCategories.map((category, index) => (
-              <button
-                key={index}
-                className={`portfolio-tab-btn ${activePortfolioTab === index ? 'active' : ''}`}
-                onClick={() => setActivePortfolioTab(index)}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Portfolio Grid */}
-          <div className="portfolio-grid">
-            {portfolioCategories[activePortfolioTab].projects.map((project, index) => (
-              <div key={index} className="portfolio-item">
-                <div className="portfolio-image-wrapper">
-                  <img src={project.imageUrl || ''} alt={project.title} />
-                  <div className="portfolio-overlay">
-                    <p className="portfolio-title">{project.title}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

@@ -1072,95 +1072,6 @@ body.dark-mode label {
   background: var(--color-bg-primary);
 }
 
-/* Portfolio Showcase Section */
-.portfolio-section {
-  padding: 100px 24px;
-  background: var(--color-bg-primary);
-}
-
-.portfolio-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
-}
-
-.portfolio-tab-btn {
-  padding: 12px 32px;
-  border: 2px solid var(--color-gray-300);
-  background: var(--color-white);
-  border-radius: 50px;
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.portfolio-tab-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.portfolio-tab-btn.active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
-}
-
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.portfolio-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  aspect-ratio: 4 / 3;
-}
-
-.portfolio-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.portfolio-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.portfolio-item:hover .portfolio-image-wrapper img {
-  transform: scale(1.05);
-}
-
-.portfolio-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 24px;
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.portfolio-item:hover .portfolio-overlay {
-  opacity: 1;
-}
-
-.portfolio-title {
-  color: var(--color-white);
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  margin: 0;
-}
 
 /* Featured Artists Carousel Section */
 .featured-artists-section {
@@ -1178,7 +1089,7 @@ body.dark-mode label {
 
 .artists-carousel-track {
   position: relative;
-  height: 700px;
+  height: 500px;
   overflow: visible;
 }
 
@@ -1986,12 +1897,8 @@ body.dark-mode label {
 }
 
 /* Responsive */
-/* Tablet Styles (2 columns for portfolio and project types) */
+/* Tablet Styles */
 @media (max-width: 1024px) and (min-width: 769px) {
-  .portfolio-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .project-types-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2037,10 +1944,6 @@ body.dark-mode label {
   }
 
   .benefits-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .portfolio-grid {
     grid-template-columns: 1fr;
   }
 
