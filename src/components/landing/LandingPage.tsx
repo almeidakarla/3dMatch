@@ -627,16 +627,15 @@ const LandingPage = ({ data }: LandingPageProps) => {
                     >
                       <div className="step-marker">
                         <div className={`step-dot ${isActive || isPast ? 'filled' : ''}`}>
-                          {isPast ? (
+                          {isPast && (
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                          ) : (
-                            <span>{index + 1}</span>
                           )}
                         </div>
                       </div>
                       <div className="step-content-vertical">
+                        <span className="step-number">{index + 1}</span>
                         <h3>{step.title}</h3>
                         <p>{step.description}</p>
                       </div>

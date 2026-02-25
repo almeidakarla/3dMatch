@@ -1131,7 +1131,7 @@ body.dark-mode label {
 .steps-vertical {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 100px;
   padding: 20px 0;
 }
 
@@ -1189,6 +1189,7 @@ body.dark-mode label {
   padding-bottom: 20px;
 }
 
+.step-number {  display: block;  font-size: 48px;  font-weight: 800;  color: var(--color-primary);  line-height: 1;  margin-bottom: 16px;  opacity: 0.9;}.step-item-vertical.active .step-number,.step-item-vertical.past .step-number {  opacity: 1;}
 .step-content-vertical h3 {
   font-size: var(--font-size-xl);
   color: var(--color-text-primary);
