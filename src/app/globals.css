@@ -303,7 +303,7 @@ body.dark-mode label {
 
 .dark-mode .sidebar-item:hover {
   background: var(--color-gray-700);
-  color: var(--color-primary);
+  color: #ffffff;
 }
 
 .sidebar-item.active {
