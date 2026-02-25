@@ -14,7 +14,6 @@ interface Artist {
   location?: string
   user_type: string
   approval_status: string
-  portfolio_images: string[]
 }
 
 export default function BrowseArtistsPage() {
@@ -46,23 +45,7 @@ export default function BrowseArtistsPage() {
 
       if (artistsError) throw artistsError
 
-      const artistsWithPortfolios = await Promise.all(
-        (artistsData || []).map(async (artist) => {
-          const { data: portfolioData } = await supabase
-            .from('portfolio')
-            .select('image_url')
-            .eq('artist_id', artist.id)
-            .order('created_at', { ascending: false })
-            .limit(3)
-
-          return {
-            ...artist,
-            portfolio_images: portfolioData?.map((p) => p.image_url) || [],
-          } as Artist
-        })
-      )
-
-      setArtists(artistsWithPortfolios)
+      setArtists(artistsData || [])
     } catch (error) {
       console.error('Error loading artists:', error)
     } finally {
@@ -133,19 +116,6 @@ export default function BrowseArtistsPage() {
                   {artist.location}
                 </p>
               )}
-
-              {/* Portfolio Thumbnails */}
-              <div className="artist-portfolio-thumbnails">
-                {artist.portfolio_images.length === 0 ? (
-                  <p className="no-portfolio-text">No portfolio yet</p>
-                ) : (
-                  artist.portfolio_images.slice(0, 3).map((imageUrl, index) => (
-                    <div key={index} className="portfolio-thumbnail">
-                      <img src={imageUrl} alt={`Work ${index + 1}`} />
-                    </div>
-                  ))
-                )}
-              </div>
 
               {/* View Profile Button */}
               <button className="btn-view-profile">View Profile</button>
