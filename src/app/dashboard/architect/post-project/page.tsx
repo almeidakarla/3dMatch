@@ -33,7 +33,7 @@ export default function PostAProjectPage() {
     number_of_rooms: '',
     renders_per_room: 3,
     budget: '',
-    currency: 'BRL',
+    currency: 'USD',
   })
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +136,7 @@ export default function PostAProjectPage() {
         number_of_rooms: '',
         renders_per_room: 3,
         budget: '',
-        currency: 'BRL',
+        currency: 'USD',
       })
       setReferenceFiles([])
       setPreviewUrls([])
@@ -259,9 +259,9 @@ export default function PostAProjectPage() {
                 onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                 className="currency-select"
               >
-                <option value="BRL">BRL</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
+                <option value="BRL">BRL</option>
               </select>
               <input
                 type="number"
