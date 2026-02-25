@@ -4496,8 +4496,11 @@ select.form-input {
 }
 
 .text-urgent {
-  color: #f59e0b !important;
   font-weight: 600;
+}
+
+.dark-mode .text-urgent {
+  color: #e5e7eb;
 }
 
 .reference-images-preview {
@@ -8766,7 +8769,7 @@ select.form-input {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--color-gray-100);
+  background: var(--color-gradient);
   border: none;
   color: var(--color-white);
   display: flex;
@@ -8778,7 +8781,7 @@ select.form-input {
 }
 
 .modern-send-button:hover:not(:disabled) {
-  background: var(--color-gray-100);
+  opacity: 0.9;
   transform: scale(1.05);
 }
 

@@ -130,13 +130,14 @@ export default function MyApplicationsPage() {
 
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true
+    if (filter === 'accepted') return app.status === 'accepted' || app.status === 'completed'
     return app.status === filter
   })
 
   const counts = {
     all: applications.length,
     pending: applications.filter(a => a.status === 'pending').length,
-    accepted: applications.filter(a => a.status === 'accepted').length,
+    accepted: applications.filter(a => a.status === 'accepted' || a.status === 'completed').length,
     rejected: applications.filter(a => a.status === 'rejected').length,
     withdrawn: applications.filter(a => a.status === 'withdrawn').length,
   }
