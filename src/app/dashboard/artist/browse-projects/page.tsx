@@ -369,7 +369,6 @@ export default function BrowseProjectsPage() {
                 )}
 
                 <div className="project-card-footer">
-                  <p className="applications-count">{project.applicationCount} application(s)</p>
                   <button className="btn-primary" onClick={() => handleApply(project)}>
                     Apply <ArrowRight size={16} />
                   </button>

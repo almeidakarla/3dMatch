@@ -4479,7 +4479,7 @@ select.form-input {
 }
 
 .dark-mode .detail-row {
-  color: var(--color-gray-400);
+  color: #e5e7eb;
 }
 
 .detail-row svg {
@@ -4487,12 +4487,16 @@ select.form-input {
   flex-shrink: 0;
 }
 
+.dark-mode .detail-row svg {
+  color: #93c5fd;
+}
+
 .detail-text {
   flex: 1;
 }
 
 .text-urgent {
-  color: var(--color-gray-700) !important;
+  color: #f59e0b !important;
   font-weight: 600;
 }
 
@@ -4542,7 +4546,7 @@ select.form-input {
 
 .project-card-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 1rem;
   padding-top: 1rem;
@@ -4551,12 +4555,6 @@ select.form-input {
 
 .dark-mode .project-card-footer {
   border-top-color: var(--color-gray-700);
-}
-
-.applications-count {
-  font-size: 0.85rem;
-  color: var(--color-gray-600);
-  font-weight: 500;
 }
 
 .dark-mode .applications-count {
@@ -7803,6 +7801,42 @@ select.form-input {
   background: var(--color-dark-bg);
 }
 
+/* Artist Profile Editor Grid */
+.profile-editor-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.profile-editor-grid .profile-photo-section {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  min-width: 220px;
+}
+
+.profile-editor-grid .profile-photo-section .photo-hint {
+  margin-top: 0.5rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.dark-mode .profile-editor-grid .profile-photo-section .photo-hint {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .profile-editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-editor-grid .profile-photo-section {
+    min-width: auto;
+  }
+}
+
 .photo-preview-container {
   flex-shrink: 0;
 }
@@ -8099,7 +8133,7 @@ select.form-input {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--color-gray-100);
+  background: var(--color-gradient);
   border: none;
   color: var(--color-white);
   display: flex;
@@ -8110,8 +8144,8 @@ select.form-input {
 }
 
 .modern-new-chat-btn:hover {
-  background: var(--color-gray-100);
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* ==================== SEARCH BAR ==================== */
@@ -8131,12 +8165,12 @@ select.form-input {
 }
 
 .modern-search-container svg {
-  color: var(--color-gray-700);
+  color: #6b7280;
   flex-shrink: 0;
 }
 
 .dark-mode .modern-search-container svg {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .modern-search-input {
@@ -8146,27 +8180,27 @@ select.form-input {
   border-radius: var(--radius-lg);
   padding: 0.625rem 1rem;
   font-size: 0.9375rem;
-  color: var(--color-gray-700);
+  color: #1f2937;
   outline: none;
 }
 
 .dark-mode .modern-search-input {
-  background: var(--color-gray-100);
-  color: var(--color-gray-700);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f3f4f6;
 }
 
 .modern-search-input::placeholder {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .dark-mode .modern-search-input::placeholder {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .modern-search-clear {
   background: none;
   border: none;
-  color: var(--color-gray-700);
+  color: #6b7280;
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 4px;
@@ -8180,11 +8214,11 @@ select.form-input {
 }
 
 .dark-mode .modern-search-clear {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .dark-mode .modern-search-clear:hover {
-  background: var(--color-gray-100);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ==================== CONVERSATIONS LIST ==================== */
@@ -8282,24 +8316,24 @@ select.form-input {
 .modern-conversation-name {
   font-weight: 600;
   font-size: 1rem;
-  color: var(--color-gray-700);
+  color: #1f2937;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .dark-mode .modern-conversation-name {
-  color: var(--color-gray-700);
+  color: #f3f4f6;
 }
 
 .modern-conversation-time {
   font-size: 0.75rem;
-  color: var(--color-gray-700);
+  color: #6b7280;
   white-space: nowrap;
 }
 
 .dark-mode .modern-conversation-time {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .modern-conversation-footer {
@@ -8311,7 +8345,7 @@ select.form-input {
 
 .modern-conversation-preview {
   font-size: 0.875rem;
-  color: var(--color-gray-700);
+  color: #6b7280;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8324,16 +8358,16 @@ select.form-input {
 }
 
 .dark-mode .modern-conversation-preview {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .modern-sent-indicator {
   flex-shrink: 0;
-  color: var(--color-gray-700);
+  color: #6b7280;
 }
 
 .dark-mode .modern-sent-indicator {
-  color: var(--color-gray-700);
+  color: #9ca3af;
 }
 
 .modern-unread-badge {
