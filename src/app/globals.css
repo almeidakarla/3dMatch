@@ -2357,12 +2357,17 @@ body.dark-mode label {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-3xl);
+  align-items: start;
 }
 
 .project-form-grid .form-column {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+}
+
+.project-form-grid .form-column .form-group {
+  margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
@@ -2917,6 +2922,512 @@ select.form-input {
 
 .dark-mode .artist-bio-excerpt {
   color: var(--color-gray-400);
+}
+
+/* ==================== BROWSE ARTISTS PAGE (Dashboard) ==================== */
+.browse-artists-container {
+  max-width: 1200px;
+}
+
+.browse-artists-container .browse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-3xl);
+  gap: var(--spacing-2xl);
+  flex-wrap: wrap;
+}
+
+.browse-artists-container .search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  min-width: 280px;
+}
+
+.dark-mode .browse-artists-container .search-box {
+  background: var(--color-gray-700);
+}
+
+.browse-artists-container .search-box svg {
+  color: var(--color-gray-500);
+}
+
+.browse-artists-container .search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: var(--font-size-base);
+  width: 100%;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .browse-artists-container .search-input {
+  color: var(--color-white);
+}
+
+.browse-artists-container .artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--spacing-2xl);
+}
+
+.browse-artists-container .artist-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-gray-200);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dark-mode .browse-artists-container .artist-card {
+  background: var(--color-dark-surface);
+  border-color: var(--color-gray-700);
+}
+
+.browse-artists-container .artist-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.browse-artists-container .artist-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+}
+
+.browse-artists-container .artist-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-gray-200);
+}
+
+.dark-mode .browse-artists-container .artist-avatar {
+  background: var(--color-gray-600);
+}
+
+.browse-artists-container .artist-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.browse-artists-container .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-500);
+}
+
+.browse-artists-container .artist-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.browse-artists-container .artist-info .artist-name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 4px 0;
+}
+
+.dark-mode .browse-artists-container .artist-info .artist-name {
+  color: var(--color-white);
+}
+
+.browse-artists-container .artist-info .artist-location {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin: 0 0 8px 0;
+}
+
+.dark-mode .browse-artists-container .artist-info .artist-location {
+  color: var(--color-gray-400);
+}
+
+.browse-artists-container .artist-technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.browse-artists-container .tech-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-full);
+  color: var(--color-gray-700);
+}
+
+.dark-mode .browse-artists-container .tech-tag {
+  background: var(--color-gray-700);
+  color: var(--color-gray-300);
+}
+
+.browse-artists-container .tech-tag.more {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.browse-artists-container .portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.browse-artists-container .portfolio-image {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-gray-200);
+}
+
+.dark-mode .browse-artists-container .portfolio-image {
+  background: var(--color-gray-700);
+}
+
+.browse-artists-container .portfolio-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.browse-artists-container .artist-card:hover .portfolio-image img {
+  transform: scale(1.05);
+}
+
+.browse-artists-container .no-portfolio {
+  grid-column: 1 / -1;
+  padding: var(--spacing-3xl);
+  text-align: center;
+  color: var(--color-gray-500);
+  background: var(--color-gray-100);
+}
+
+.dark-mode .browse-artists-container .no-portfolio {
+  background: var(--color-gray-800);
+  color: var(--color-gray-400);
+}
+
+/* ==================== ARCHITECT PROJECTS PAGE ==================== */
+.architect-projects-container {
+  max-width: 1000px;
+}
+
+.architect-projects-container .projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.architect-projects-container .project-detail-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--color-gray-200);
+}
+
+.dark-mode .architect-projects-container .project-detail-card {
+  background: var(--color-dark-surface);
+  border-color: var(--color-gray-700);
+}
+
+.architect-projects-container .project-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-lg);
+}
+
+.architect-projects-container .project-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0 0 8px 0;
+  transition: opacity 0.2s;
+}
+
+.architect-projects-container .project-title:hover {
+  opacity: 0.8;
+}
+
+.architect-projects-container .project-meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+.dark-mode .architect-projects-container .project-meta {
+  color: var(--color-gray-400);
+}
+
+.architect-projects-container .project-description {
+  color: var(--color-gray-700);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+}
+
+.dark-mode .architect-projects-container .project-description {
+  color: var(--color-gray-300);
+}
+
+.architect-projects-container .no-applications {
+  padding: var(--spacing-xl);
+  text-align: center;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  color: var(--color-gray-600);
+}
+
+.dark-mode .architect-projects-container .no-applications {
+  background: var(--color-gray-800);
+  color: var(--color-gray-400);
+}
+
+.architect-projects-container .applications-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.dark-mode .architect-projects-container .applications-section {
+  border-top-color: var(--color-gray-700);
+}
+
+.architect-projects-container .applications-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-primary);
+}
+
+.dark-mode .architect-projects-container .applications-title {
+  color: var(--color-white);
+}
+
+.architect-projects-container .applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.architect-projects-container .application-card {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.dark-mode .architect-projects-container .application-card {
+  background: var(--color-gray-800);
+}
+
+.architect-projects-container .application-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.architect-projects-container .artist-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.architect-projects-container .artist-photo-small {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-gray-300);
+}
+
+.dark-mode .architect-projects-container .artist-photo-small {
+  background: var(--color-gray-600);
+}
+
+.architect-projects-container .artist-photo-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.architect-projects-container .artist-photo-small .photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  background: var(--color-gray-200);
+}
+
+.dark-mode .architect-projects-container .artist-photo-small .photo-placeholder {
+  background: var(--color-gray-700);
+  color: var(--color-gray-400);
+}
+
+.architect-projects-container .artist-name {
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .architect-projects-container .artist-name {
+  color: var(--color-white);
+}
+
+.architect-projects-container .artist-location {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.architect-projects-container .artist-bio {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.dark-mode .architect-projects-container .artist-bio {
+  color: var(--color-gray-400);
+}
+
+.architect-projects-container .application-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+}
+
+.dark-mode .architect-projects-container .application-details {
+  background: var(--color-gray-700);
+}
+
+.architect-projects-container .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.architect-projects-container .detail-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+  font-weight: 500;
+}
+
+.architect-projects-container .detail-value {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .architect-projects-container .detail-value {
+  color: var(--color-white);
+}
+
+.architect-projects-container .proposal-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.architect-projects-container .proposal-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .architect-projects-container .proposal-title {
+  color: var(--color-white);
+}
+
+.architect-projects-container .proposal-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.dark-mode .architect-projects-container .proposal-text {
+  color: var(--color-gray-400);
+}
+
+.architect-projects-container .application-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-md);
+}
+
+.architect-projects-container .application-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.architect-projects-container .accepted-section,
+.architect-projects-container .delivery-review-section {
+  margin-top: var(--spacing-md);
+}
+
+.architect-projects-container .accepted-message,
+.architect-projects-container .delivery-approved-message {
+  padding: var(--spacing-md);
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: var(--radius-md);
+  color: #16a34a;
+  font-size: var(--font-size-sm);
+}
+
+.architect-projects-container .delivery-alert {
+  padding: var(--spacing-md);
+  background: rgba(234, 179, 8, 0.1);
+  border-radius: var(--radius-md);
+  color: #ca8a04;
+  font-weight: 500;
+}
+
+.architect-projects-container .delivery-rejected-message {
+  padding: var(--spacing-md);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-md);
+  color: #dc2626;
+  font-size: var(--font-size-sm);
+}
+
+.architect-projects-container .rejection-reason {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.architect-projects-container .rejection-reason strong {
+  color: #dc2626;
+}
+
+.architect-projects-container .rejection-reason p {
+  margin: 4px 0 0 0;
+  color: var(--color-gray-700);
+}
+
+.dark-mode .architect-projects-container .rejection-reason p {
+  color: var(--color-gray-300);
 }
 
 .artist-portfolio-preview {
@@ -10639,9 +11150,9 @@ select.form-input {
 .past-project-card .btn-view-details {
   width: 100%;
   padding: var(--spacing-md);
-  background: transparent;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
+  background: var(--color-gradient);
+  border: none;
+  color: var(--color-white);
   border-radius: var(--radius-md);
   font-weight: 500;
   cursor: pointer;
@@ -10649,8 +11160,8 @@ select.form-input {
 }
 
 .past-project-card .btn-view-details:hover {
-  background: var(--color-primary);
-  color: white;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {

@@ -98,7 +98,7 @@ export default function ApplicationsReceivedPage() {
       pending: { label: 'Pending', className: 'badge-pending' },
       accepted: { label: 'Accepted', className: 'badge-accepted' },
       completed: { label: 'Completed', className: 'badge-accepted' },
-      rejected: { label: 'Rejected', className: 'badge-rejected' },
+      rejected: { label: 'Declined', className: 'badge-rejected' },
     }
     return badges[status] || badges.pending
   }
@@ -130,7 +130,7 @@ export default function ApplicationsReceivedPage() {
       <div className="filter-tabs">
         {(['all', 'pending', 'accepted', 'completed', 'rejected'] as const).map(tab => (
           <button key={tab} className={`filter-tab ${filter === tab ? 'active' : ''}`} onClick={() => setFilter(tab)}>
-            {tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
+            {tab === 'rejected' ? 'Declined' : tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
           </button>
         ))}
       </div>
