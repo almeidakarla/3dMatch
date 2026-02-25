@@ -24,7 +24,7 @@ interface Artist {
   bio: string;
   location: string;
   profile_photo: string;
-  skills: string[];
+  software: string[];
   portfolio_images: string[];
 }
 
@@ -96,7 +96,7 @@ const ArchitectDashboard = () => {
           bio,
           location,
           profile_photo,
-          skills
+          software
         `)
         .eq('user_type', 'artista')
         .eq('approval_status', 'approved')
@@ -308,10 +308,10 @@ const ArchitectDashboard = () => {
                   {artist.bio && (
                     <p className="artist-bio">{artist.bio}</p>
                   )}
-                  {artist.skills && artist.skills.length > 0 && (
+                  {artist.software && artist.software.length > 0 && (
                     <div className="artist-skills">
-                      {artist.skills.slice(0, 3).map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
+                      {artist.software.slice(0, 3).map((software, index) => (
+                        <span key={index} className="skill-tag">{software}</span>
                       ))}
                     </div>
                   )}
@@ -438,9 +438,9 @@ const ArchitectDashboard = () => {
 
         .btn-view-all {
           padding: 0.5rem 1rem;
-          background: transparent;
-          color: #667eea;
-          border: 2px solid #667eea;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
           border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
@@ -448,8 +448,8 @@ const ArchitectDashboard = () => {
         }
 
         .btn-view-all:hover {
-          background: #667eea;
-          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
         .empty-state-card {

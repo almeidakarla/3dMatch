@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 import { validateArtistProfile } from '@/utils/contentFilter'
+import { Trash2 } from 'lucide-react'
 
 const SOFTWARE_OPTIONS = [
   'SketchUp',
@@ -620,13 +621,19 @@ export default function ArtistProfile() {
                 />
               </div>
               <div className="portfolio-modal-details">
-                <h2 className="portfolio-modal-title">{selectedPortfolioItem.title}</h2>
-                {selectedPortfolioItem.description && (
-                  <div className="portfolio-modal-section">
-                    <h3>Description</h3>
-                    <p>{selectedPortfolioItem.description}</p>
-                  </div>
-                )}
+                <div className="portfolio-modal-header">
+                  <h2 className="portfolio-modal-title">{selectedPortfolioItem.title}</h2>
+                  <button
+                    onClick={() => {
+                      setShowPortfolioModal(false)
+                      handlePortfolioDelete(selectedPortfolioItem.id)
+                    }}
+                    className="portfolio-modal-delete"
+                    title="Delete image"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
                 {selectedPortfolioItem.technologies && selectedPortfolioItem.technologies.length > 0 && (
                   <div className="portfolio-modal-section">
                     <h3>Technologies Used</h3>
@@ -637,16 +644,12 @@ export default function ArtistProfile() {
                     </div>
                   </div>
                 )}
-                <button
-                  onClick={() => {
-                    setShowPortfolioModal(false)
-                    handlePortfolioDelete(selectedPortfolioItem.id)
-                  }}
-                  className="btn-delete"
-                  style={{ marginTop: '1.5rem' }}
-                >
-                  Delete Image
-                </button>
+                {selectedPortfolioItem.description && (
+                  <div className="portfolio-modal-section">
+                    <h3>Description</h3>
+                    <p>{selectedPortfolioItem.description}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

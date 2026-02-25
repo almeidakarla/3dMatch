@@ -165,90 +165,92 @@ export default function PostAProjectPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="project-form">
-        <div className="form-group">
-          <label className="form-label">Project Title *</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            placeholder="Ex: Modern House Rendering"
-            required
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Detailed Description *</label>
-          <textarea
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder="Describe the project, desired style, number of renders, specific angles, etc..."
-            rows={6}
-            required
-            className="form-textarea"
-          />
-          <p className="form-hint">The more details, the better proposals you&apos;ll receive!</p>
-        </div>
-
-        <div className="form-row">
+      <form onSubmit={handleSubmit} className="project-form project-form-grid">
+        <div className="form-column">
           <div className="form-group">
-            <label className="form-label">Deadline *</label>
+            <label className="form-label">Project Title *</label>
             <input
-              type="date"
-              value={formData.deadline}
-              onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-              min={new Date().toISOString().split('T')[0]}
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="Ex: Modern House Rendering"
               required
               className="form-input"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Number of Rooms</label>
-            <input
-              type="number"
-              value={formData.number_of_rooms}
-              onChange={(e) => setFormData({ ...formData, number_of_rooms: e.target.value })}
-              placeholder="Ex: 5"
-              min="1"
-              className="form-input"
+            <label className="form-label">Detailed Description *</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Describe the project, desired style, number of renders, specific angles, etc..."
+              rows={6}
+              required
+              className="form-textarea"
             />
-            <p className="form-hint">How many rooms need to be rendered?</p>
+            <p className="form-hint">The more details, the better proposals you&apos;ll receive!</p>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Renders per Room</label>
-            <select
-              value={formData.renders_per_room}
-              onChange={(e) => setFormData({ ...formData, renders_per_room: parseInt(e.target.value) })}
-              className="form-select"
-            >
-              <option value={1}>1 render</option>
-              <option value={2}>2 renders</option>
-              <option value={3}>3 renders</option>
-              <option value={4}>4 renders</option>
-              <option value={5}>5 renders</option>
-            </select>
-            <p className="form-hint">Recommended minimum: 3 renders per room</p>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Deadline *</label>
+              <input
+                type="date"
+                value={formData.deadline}
+                onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                min={new Date().toISOString().split('T')[0]}
+                required
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Number of Rooms</label>
+              <input
+                type="number"
+                value={formData.number_of_rooms}
+                onChange={(e) => setFormData({ ...formData, number_of_rooms: e.target.value })}
+                placeholder="Ex: 5"
+                min="1"
+                className="form-input"
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Renders per Room</label>
+              <select
+                value={formData.renders_per_room}
+                onChange={(e) => setFormData({ ...formData, renders_per_room: parseInt(e.target.value) })}
+                className="form-select"
+              >
+                <option value={1}>1 render</option>
+                <option value={2}>2 renders</option>
+                <option value={3}>3 renders</option>
+                <option value={4}>4 renders</option>
+                <option value={5}>5 renders</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Category *</label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+                className="form-select"
+              >
+                {categories.map(cat => (
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Category *</label>
-          <select
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            required
-            className="form-select"
-          >
-            {categories.map(cat => (
-              <option key={cat.value} value={cat.value}>{cat.label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-row">
+        <div className="form-column">
           <div className="form-group">
             <label className="form-label">Your Budget (Optional)</label>
             <div className="price-input-group">
@@ -273,42 +275,42 @@ export default function PostAProjectPage() {
             </div>
             <p className="form-hint">Artists can see your budget and submit competitive proposals</p>
           </div>
-        </div>
 
-        <div className="form-group">
-          <label className="form-label">Reference Images (Optional)</label>
-          <p className="form-hint">Add floor plans, site photos, style references, etc.</p>
+          <div className="form-group">
+            <label className="form-label">Reference Images (Optional)</label>
+            <p className="form-hint">Add floor plans, site photos, style references, etc.</p>
 
-          <label className="file-upload-area">
-            <Upload size={24} />
-            <span>Click to add images</span>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileSelect}
-              className="file-input-hidden"
-            />
-          </label>
+            <label className="file-upload-area">
+              <Upload size={24} />
+              <span>Click to add images</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                className="file-input-hidden"
+              />
+            </label>
 
-          {previewUrls.length > 0 && (
-            <div className="image-previews">
-              {previewUrls.map((url, index) => (
-                <div key={index} className="preview-item">
-                  <img src={url} alt={`Preview ${index + 1}`} />
-                  <button type="button" onClick={() => removeImage(index)} className="remove-image-btn">
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+            {previewUrls.length > 0 && (
+              <div className="image-previews">
+                {previewUrls.map((url, index) => (
+                  <div key={index} className="preview-item">
+                    <img src={url} alt={`Preview ${index + 1}`} />
+                    <button type="button" onClick={() => removeImage(index)} className="remove-image-btn">
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-        <div className="form-actions">
-          <button type="submit" disabled={loading || uploadingImages} className="btn-primary btn-large">
-            {loading ? 'Publishing...' : uploadingImages ? 'Uploading Images...' : 'Publish Project'}
-          </button>
+          <div className="form-actions">
+            <button type="submit" disabled={loading || uploadingImages} className="btn-primary btn-large">
+              {loading ? 'Publishing...' : uploadingImages ? 'Uploading Images...' : 'Publish Project'}
+            </button>
+          </div>
         </div>
       </form>
     </div>
