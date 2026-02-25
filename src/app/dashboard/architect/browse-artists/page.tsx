@@ -83,7 +83,7 @@ export default function BrowseArtistsPage() {
   return (
     <div className="browse-artists-page">
       <h2 className="section-title">Browse Artists</h2>
-      <p className="subtitle">Discover talented 3D artists and their portfolios</p>
+      <p className="subtitle">Discover talented 3D artists and view their portfolios</p>
 
       <div className="search-container">
         <Search size={20} />
