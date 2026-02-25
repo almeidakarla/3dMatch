@@ -498,29 +498,31 @@ export default function ArtistProfile() {
           <div className="portfolio-add-form">
             <h3>Add New Image</h3>
             <form onSubmit={handlePortfolioSubmit}>
-              <div className="form-group">
-                <label className="form-label">Image *</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePortfolioFileSelect}
-                  required
-                  className="form-input"
-                />
-                {portfolioForm.preview && (
-                  <img src={portfolioForm.preview} alt="Preview" className="portfolio-preview" />
-                )}
-              </div>
-              <div className="form-group">
-                <label className="form-label">Title *</label>
-                <input
-                  type="text"
-                  value={portfolioForm.title}
-                  onChange={(e) => setPortfolioForm({ ...portfolioForm, title: e.target.value })}
-                  placeholder="Project name or title"
-                  required
-                  className="form-input"
-                />
+              <div className="form-row-2col">
+                <div className="form-group">
+                  <label className="form-label">Image *</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePortfolioFileSelect}
+                    required
+                    className="form-input"
+                  />
+                  {portfolioForm.preview && (
+                    <img src={portfolioForm.preview} alt="Preview" className="portfolio-preview" />
+                  )}
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Title *</label>
+                  <input
+                    type="text"
+                    value={portfolioForm.title}
+                    onChange={(e) => setPortfolioForm({ ...portfolioForm, title: e.target.value })}
+                    placeholder="Project name or title"
+                    required
+                    className="form-input"
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <label className="form-label">Description</label>

@@ -11266,6 +11266,18 @@ select.form-input {
   border: 1px solid #e0e0e0;
 }
 
+.portfolio-add-form .form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .portfolio-add-form .form-row-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
 .portfolio-preview {
   max-width: 300px;
   margin-top: 1rem;
