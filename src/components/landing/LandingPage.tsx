@@ -625,9 +625,6 @@ const LandingPage = ({ data }: LandingPageProps) => {
                       key={index}
                       className={`step-item-vertical ${isActive ? 'active' : ''} ${isPast ? 'past' : ''}`}
                     >
-                      <div className="step-marker">
-                        <div className={`step-dot ${isActive || isPast ? 'filled' : ''}`} />
-                      </div>
                       <div className="step-content-vertical">
                         <span className={`step-number ${isActive || isPast ? 'active' : ''}`}>{index + 1}</span>
                         <h3>{step.title}</h3>
