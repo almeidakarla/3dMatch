@@ -754,7 +754,7 @@ body.dark-mode label {
 .results-intro-text {
   font-size: var(--font-size-lg);
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--color-gray-800);
 }
 
 .benefits-grid {
@@ -796,11 +796,13 @@ body.dark-mode label {
 .benefit-card h3 {
   font-size: 22px;
   margin-bottom: 12px;
+  color: var(--color-gray-800);
 }
 
 .benefit-card p {
   font-size: 15px;
   line-height: 1.6;
+  color: var(--color-gray-800);
 }
 
 /* Results Video Showcase */
@@ -834,7 +836,7 @@ body.dark-mode label {
 .results-video-caption {
   margin-top: var(--spacing-3xl);
   font-size: var(--font-size-lg);
-  color: var(--color-text-secondary);
+  color: var(--color-gray-800);
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
@@ -932,7 +934,7 @@ body.dark-mode label {
 .faq-answer {
   padding: 0 var(--spacing-3xl) var(--spacing-3xl) var(--spacing-3xl);
   font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
+  color: var(--color-gray-800);
   line-height: 1.7;
   margin: 0;
   animation: fadeIn 0.3s ease;
@@ -1166,7 +1168,7 @@ body.dark-mode label {
 
 .step-content-vertical p {
   font-size: var(--font-size-base);
-  color: var(--color-gray-600);
+  color: var(--color-gray-800);
   line-height: 1.7;
 }
 
@@ -1675,7 +1677,7 @@ body.dark-mode label {
 
 .project-type-card p {
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: var(--color-gray-800);
   line-height: 1.6;
   margin: 0;
 }
@@ -2020,7 +2022,7 @@ body.dark-mode label {
 
 .platform-tab-content p {
   font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
+  color: var(--color-gray-800);
   line-height: 1.6;
 }
 
