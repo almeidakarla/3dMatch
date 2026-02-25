@@ -1,0 +1,898 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "publishedAt",
+        "type": "datetime"
+      },
+      {
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "name": "body",
+        "type": "array"
+      }
+    ],
+    "name": "post",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "Carousel images for the hero section background",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "heroImages",
+        "type": "array",
+        "title": "Hero Background Images"
+      },
+      {
+        "initialValue": "High end",
+        "name": "heroTitleLine1",
+        "type": "string"
+      },
+      {
+        "initialValue": "architectural renders",
+        "name": "heroTitleLine2",
+        "type": "string"
+      },
+      {
+        "initialValue": "that sell your project.",
+        "name": "heroTitleLine3",
+        "type": "string"
+      },
+      {
+        "name": "heroSubtitle",
+        "type": "text"
+      },
+      {
+        "initialValue": "Render created by a 3dMatch artist.",
+        "name": "heroAttribution",
+        "type": "string"
+      },
+      {
+        "initialValue": "Get Started",
+        "name": "heroPrimaryCta",
+        "type": "string",
+        "title": "Primary CTA Button Text"
+      },
+      {
+        "initialValue": "Learn More",
+        "name": "heroSecondaryCta",
+        "type": "string",
+        "title": "Secondary CTA Button Text"
+      },
+      {
+        "name": "resultsTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "name": "resultsIntro",
+        "type": "text",
+        "title": "Introduction Text"
+      },
+      {
+        "of": [
+          {
+            "type": "benefitCard"
+          }
+        ],
+        "name": "resultsBenefits",
+        "type": "array",
+        "title": "Benefit Cards"
+      },
+      {
+        "options": {
+          "accept": "video/*"
+        },
+        "name": "resultsVideo",
+        "type": "file",
+        "title": "Showcase Video"
+      },
+      {
+        "name": "resultsVideoPoster",
+        "type": "image",
+        "title": "Video Poster/Thumbnail"
+      },
+      {
+        "initialValue": "See It In Action",
+        "name": "resultsVideoTitle",
+        "type": "string",
+        "title": "Video Section Title"
+      },
+      {
+        "name": "resultsVideoCaption",
+        "type": "text",
+        "title": "Video Caption"
+      },
+      {
+        "name": "resultsCta",
+        "type": "string",
+        "title": "CTA Button Text"
+      },
+      {
+        "initialValue": "How It Works",
+        "name": "howItWorksTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "of": [
+          {
+            "type": "stepItem",
+            "title": "Step"
+          }
+        ],
+        "name": "howItWorksSteps",
+        "type": "array",
+        "title": "Steps"
+      },
+      {
+        "description": "Vertical portfolio images that display alongside the steps. Add one image per step.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "howItWorksImages",
+        "type": "array",
+        "title": "Showcase Images (Vertical)"
+      },
+      {
+        "initialValue": "Why 3dMatch",
+        "name": "benefitsTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "of": [
+          {
+            "type": "benefitCard"
+          }
+        ],
+        "name": "benefitsCards",
+        "type": "array",
+        "title": "Benefit Cards"
+      },
+      {
+        "name": "benefitsCta",
+        "type": "string",
+        "title": "CTA Button Text"
+      },
+      {
+        "of": [
+          {
+            "type": "platformFeature"
+          }
+        ],
+        "name": "platformFeatures",
+        "type": "array"
+      },
+      {
+        "initialValue": "Portfolio Showcase",
+        "name": "portfolioTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "name": "portfolioSubtitle",
+        "type": "text",
+        "title": "Section Subtitle"
+      },
+      {
+        "of": [
+          {
+            "type": "portfolioCategory"
+          }
+        ],
+        "name": "portfolioCategories",
+        "type": "array"
+      },
+      {
+        "initialValue": "Meet Our 3D Artists",
+        "name": "artistsTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "name": "artistsSubtitle",
+        "type": "text",
+        "title": "Section Subtitle"
+      },
+      {
+        "of": [
+          {
+            "type": "featuredArtist"
+          }
+        ],
+        "name": "featuredArtists",
+        "type": "array"
+      },
+      {
+        "initialValue": "Frequently Asked Questions",
+        "name": "faqTitle",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItem",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faqItems",
+        "type": "array",
+        "title": "FAQ Items"
+      },
+      {
+        "name": "finalCtaTitle",
+        "type": "string",
+        "title": "CTA Title"
+      },
+      {
+        "name": "finalCtaSubtitle",
+        "type": "text",
+        "title": "CTA Subtitle"
+      },
+      {
+        "name": "finalCtaButton",
+        "type": "string",
+        "title": "CTA Button Text"
+      },
+      {
+        "initialValue": "Stay Updated",
+        "name": "footerSubscribeTitle",
+        "type": "string",
+        "title": "Subscribe Title"
+      },
+      {
+        "name": "footerSubscribeText",
+        "type": "text",
+        "title": "Subscribe Text"
+      },
+      {
+        "name": "footerCopyright",
+        "type": "string",
+        "title": "Copyright Text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "socialTwitter",
+        "type": "url",
+        "title": "Twitter URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "socialInstagram",
+        "type": "url",
+        "title": "Instagram URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "socialLinkedIn",
+        "type": "url",
+        "title": "LinkedIn URL"
+      }
+    ],
+    "name": "landingPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Location Pin",
+              "value": "location"
+            },
+            {
+              "title": "Star",
+              "value": "star"
+            },
+            {
+              "title": "Checkmark",
+              "value": "checkmark"
+            },
+            {
+              "title": "Lock",
+              "value": "lock"
+            },
+            {
+              "title": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "title": "Dashboard",
+              "value": "dashboard"
+            }
+          ]
+        },
+        "name": "iconType",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Purple",
+              "value": "benefit-purple"
+            },
+            {
+              "title": "Blue",
+              "value": "benefit-blue"
+            },
+            {
+              "title": "Light Blue",
+              "value": "benefit-blue-light"
+            }
+          ]
+        },
+        "initialValue": "benefit-purple",
+        "name": "colorTheme",
+        "type": "string"
+      }
+    ],
+    "name": "benefitCard",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "description",
+        "type": "text"
+      }
+    ],
+    "name": "stepItem",
+    "type": "object",
+    "title": "Step"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Dashboard",
+              "value": "dashboard"
+            },
+            {
+              "title": "Checkmark",
+              "value": "checkmark"
+            },
+            {
+              "title": "Lock",
+              "value": "lock"
+            },
+            {
+              "title": "Lightning",
+              "value": "lightning"
+            }
+          ]
+        },
+        "name": "iconType",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Feature Image"
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "title": "Image Alt Text"
+      }
+    ],
+    "name": "platformFeature",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Project Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Project Title"
+      }
+    ],
+    "name": "portfolioProject",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Category Name"
+      },
+      {
+        "of": [
+          {
+            "type": "portfolioProject"
+          }
+        ],
+        "name": "projects",
+        "type": "array"
+      }
+    ],
+    "name": "portfolioCategory",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "avatar",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Title/Role"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "skills",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "portfolio",
+        "type": "array",
+        "title": "Portfolio Images"
+      }
+    ],
+    "name": "featuredArtist",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "answer",
+        "type": "text"
+      }
+    ],
+    "name": "faqItem",
+    "type": "object",
+    "title": "FAQ Item"
+  }
+]

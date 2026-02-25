@@ -31,6 +31,7 @@ const LANDING_PAGE_QUERY = `*[_type == "landingPage"][0]{
   // How It Works
   howItWorksTitle,
   howItWorksSteps,
+  howItWorksImages,
 
   // Benefits Section
   benefitsTitle,
@@ -39,11 +40,6 @@ const LANDING_PAGE_QUERY = `*[_type == "landingPage"][0]{
 
   // Platform Features
   platformFeatures,
-
-  // Portfolio Showcase
-  portfolioTitle,
-  portfolioSubtitle,
-  portfolioCategories,
 
   // Featured Artists
   artistsTitle,
@@ -86,23 +82,17 @@ function transformImages(data: any) {
       ? urlFor(data.resultsVideoPoster)?.format('webp').quality(80).width(1280).url()
       : null,
 
+    // Transform How It Works showcase images (vertical, portrait orientation)
+    howItWorksImages: data.howItWorksImages?.map((img: any) =>
+      urlFor(img)?.format('webp').quality(85).width(600).height(750).url()
+    ) || [],
+
     // Transform platform features images
     platformFeatures: data.platformFeatures?.map((feature: any) => ({
       ...feature,
       imageUrl: feature.image
         ? urlFor(feature.image)?.format('webp').quality(80).width(800).url()
         : null,
-    })) || [],
-
-    // Transform portfolio categories
-    portfolioCategories: data.portfolioCategories?.map((category: any) => ({
-      ...category,
-      projects: category.projects?.map((project: any) => ({
-        ...project,
-        imageUrl: project.image
-          ? urlFor(project.image)?.format('webp').quality(80).width(600).url()
-          : null,
-      })) || [],
     })) || [],
 
     // Transform featured artists

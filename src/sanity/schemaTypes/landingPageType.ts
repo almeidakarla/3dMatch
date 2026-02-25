@@ -372,6 +372,14 @@ export const landingPageType = defineType({
       of: [{type: 'stepItem'}],
       group: 'howItWorks',
     }),
+    defineField({
+      name: 'howItWorksImages',
+      title: 'Showcase Images (Vertical)',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}}],
+      group: 'howItWorks',
+      description: 'Vertical portfolio images that display alongside the steps. Add one image per step.',
+    }),
 
     // ===== BENEFITS SECTION =====
     defineField({

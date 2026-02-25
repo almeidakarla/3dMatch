@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 // Types for Sanity data
@@ -73,6 +73,7 @@ interface LandingPageData {
   // How It Works
   howItWorksTitle?: string;
   howItWorksSteps?: StepItem[];
+  howItWorksImages?: string[];
 
   // Benefits
   benefitsTitle?: string;
@@ -305,6 +306,11 @@ const LandingPage = ({ data }: LandingPageProps) => {
   // FAQ accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  // How It Works scroll tracking
+  const howItWorksRef = useRef<HTMLDivElement>(null);
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
@@ -390,6 +396,48 @@ const LandingPage = ({ data }: LandingPageProps) => {
       window.removeEventListener('resize', handleScroll);
     };
   }, []);
+
+  // How It Works scroll tracking
+  useEffect(() => {
+    const handleHowItWorksScroll = () => {
+      if (!howItWorksRef.current) return;
+
+      const section = howItWorksRef.current;
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = section.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate progress: 0 when section enters, 1 when section leaves
+      const startOffset = viewportHeight * 0.3; // Start tracking when section is 30% visible
+      const scrollStart = -rect.top + startOffset;
+      const scrollEnd = sectionHeight - viewportHeight + startOffset;
+
+      if (scrollStart < 0) {
+        setScrollProgress(0);
+        setActiveStep(0);
+      } else if (scrollStart > scrollEnd) {
+        setScrollProgress(1);
+        setActiveStep(howItWorksSteps.length - 1);
+      } else {
+        const progress = scrollStart / scrollEnd;
+        setScrollProgress(progress);
+
+        // Calculate active step based on progress
+        const stepIndex = Math.min(
+          Math.floor(progress * howItWorksSteps.length),
+          howItWorksSteps.length - 1
+        );
+        setActiveStep(stepIndex);
+      }
+    };
+
+    window.addEventListener('scroll', handleHowItWorksScroll);
+    handleHowItWorksScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleHowItWorksScroll);
+    };
+  }, [howItWorksSteps.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
@@ -517,21 +565,86 @@ const LandingPage = ({ data }: LandingPageProps) => {
         </div>
       </section>
 
-      {/* How it Works Section */}
-      <section className="how-it-works-section">
+      {/* How it Works Section - with scroll-based animation */}
+      <section className="how-it-works-section" ref={howItWorksRef}>
         <div className="section-wrapper">
           <h2 className="section-title">{content.howItWorksTitle}</h2>
 
-          <div className="steps-list">
-            {howItWorksSteps.map((step, index) => (
-              <div key={index} className="step-item">
-                <div className="step-number">{index + 1}</div>
-                <div className="step-content">
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </div>
+          <div className="how-it-works-container">
+            {/* Left side - Portfolio Image Carousel */}
+            <div className="how-it-works-showcase">
+              <div className="showcase-sticky">
+                {content.howItWorksImages && content.howItWorksImages.length > 0 ? (
+                  content.howItWorksImages.map((imageUrl, index) => (
+                    <div
+                      key={index}
+                      className={`showcase-image ${activeStep === index ? 'active' : ''}`}
+                    >
+                      <img src={imageUrl} alt={`3D Render Showcase ${index + 1}`} />
+                    </div>
+                  ))
+                ) : (
+                  howItWorksSteps.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`showcase-image showcase-placeholder ${activeStep === index ? 'active' : ''}`}
+                    >
+                      <div className="placeholder-content">
+                        <span className="placeholder-number">{index + 1}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-            ))}
+            </div>
+
+            {/* Right side - Steps with glowing timeline */}
+            <div className="how-it-works-steps">
+              {/* Timeline track */}
+              <div className="timeline-track">
+                <div className="timeline-line" />
+                <div
+                  className="timeline-progress"
+                  style={{ height: `${scrollProgress * 100}%` }}
+                />
+                <div
+                  className="timeline-glow"
+                  style={{ top: `${scrollProgress * 100}%` }}
+                />
+              </div>
+
+              {/* Steps */}
+              <div className="steps-vertical">
+                {howItWorksSteps.map((step, index) => {
+                  const stepProgress = index / howItWorksSteps.length;
+                  const isActive = activeStep === index;
+                  const isPast = scrollProgress > stepProgress + (1 / howItWorksSteps.length);
+
+                  return (
+                    <div
+                      key={index}
+                      className={`step-item-vertical ${isActive ? 'active' : ''} ${isPast ? 'past' : ''}`}
+                    >
+                      <div className="step-marker">
+                        <div className={`step-dot ${isActive || isPast ? 'filled' : ''}`}>
+                          {isPast ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          ) : (
+                            <span>{index + 1}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="step-content-vertical">
+                        <h3>{step.title}</h3>
+                        <p>{step.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
