@@ -1189,7 +1189,7 @@ body.dark-mode label {
   padding-bottom: 20px;
 }
 
-.step-number {  display: block;  font-size: 48px;  font-weight: 800;  color: var(--color-primary);  line-height: 1;  margin-bottom: 16px;  opacity: 0.9;}.step-item-vertical.active .step-number,.step-item-vertical.past .step-number {  opacity: 1;}
+.step-number {  display: flex;  align-items: center;  justify-content: center;  width: 64px;  height: 64px;  border-radius: 50%;  border: 3px solid var(--color-gray-300);  font-size: 28px;  font-weight: 800;  color: var(--color-gray-400);  margin-bottom: 20px;  transition: all 0.3s ease;}.step-number.active {  border-color: var(--color-primary);  color: var(--color-primary);  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);}
 .step-content-vertical h3 {
   font-size: var(--font-size-xl);
   color: var(--color-text-primary);
