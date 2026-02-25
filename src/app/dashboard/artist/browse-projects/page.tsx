@@ -289,30 +289,6 @@ export default function BrowseProjectsPage() {
               )}
             </div>
 
-            <div className="filter-group">
-              <label>Delivery Deadline</label>
-              <div className="rating-filter">
-                <button
-                  className={`rating-btn ${deadlineFilter === 'urgent' ? 'active' : ''}`}
-                  onClick={() => setDeadlineFilter(deadlineFilter === 'urgent' ? 'all' : 'urgent')}
-                >
-                  Urgent (up to 7 days)
-                </button>
-                <button
-                  className={`rating-btn ${deadlineFilter === 'week' ? 'active' : ''}`}
-                  onClick={() => setDeadlineFilter(deadlineFilter === 'week' ? 'all' : 'week')}
-                >
-                  Up to 2 weeks
-                </button>
-                <button
-                  className={`rating-btn ${deadlineFilter === 'month' ? 'active' : ''}`}
-                  onClick={() => setDeadlineFilter(deadlineFilter === 'month' ? 'all' : 'month')}
-                >
-                  Up to 1 month
-                </button>
-              </div>
-            </div>
-
             {hasActiveFilters() && (
               <button className="clear-filters-btn" onClick={clearFilters}>
                 Clear Filters

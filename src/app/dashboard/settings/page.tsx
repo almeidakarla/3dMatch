@@ -295,77 +295,79 @@ export default function SettingsPage() {
           <div className="settings-section">
             <h3 className="settings-section-title">Personal Information</h3>
 
-            <div className="profile-photo-section">
-              <div className="photo-preview-container">
-                {photoPreview ? (
-                  <img src={photoPreview} alt="Profile" className="photo-preview" />
-                ) : (
-                  <div className="photo-placeholder">
-                    <User size={48} />
-                  </div>
-                )}
+            <div className="profile-info-grid">
+              <div className="profile-photo-column">
+                <div className="photo-preview-container">
+                  {photoPreview ? (
+                    <img src={photoPreview} alt="Profile" className="photo-preview" />
+                  ) : (
+                    <div className="photo-placeholder">
+                      <User size={48} />
+                    </div>
+                  )}
+                </div>
+                <div className="photo-upload-controls">
+                  <label htmlFor="photo-upload" className="btn-secondary">
+                    <Upload size={18} />
+                    Choose Photo
+                  </label>
+                  <input
+                    id="photo-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                    style={{ display: 'none' }}
+                  />
+                  {profilePhoto && (
+                    <button
+                      onClick={handlePhotoUpload}
+                      disabled={loading}
+                      className="btn-primary"
+                    >
+                      {loading ? 'Uploading...' : 'Save Photo'}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="photo-upload-controls">
-                <label htmlFor="photo-upload" className="btn-secondary">
-                  <Upload size={18} />
-                  Choose Photo
-                </label>
-                <input
-                  id="photo-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoChange}
-                  style={{ display: 'none' }}
-                />
-                {profilePhoto && (
-                  <button
-                    onClick={handlePhotoUpload}
+
+              <form onSubmit={handleProfileUpdate} className="settings-form profile-form-column">
+                <div className="form-group">
+                  <label htmlFor="full_name" className="form-label">
+                    <User size={18} />
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="full_name"
+                    value={profileForm.full_name}
+                    onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
+                    className="form-input"
                     disabled={loading}
-                    className="btn-primary"
-                  >
-                    {loading ? 'Uploading...' : 'Save Photo'}
-                  </button>
-                )}
-              </div>
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">
+                    <Phone size={18} />
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={profileForm.phone}
+                    onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                    className="form-input"
+                    placeholder="+55 (11) 98765-4321"
+                    disabled={loading}
+                  />
+                </div>
+
+                <button type="submit" disabled={loading} className="btn-primary">
+                  <Save size={18} />
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </form>
             </div>
-
-            <form onSubmit={handleProfileUpdate} className="settings-form">
-              <div className="form-group">
-                <label htmlFor="full_name" className="form-label">
-                  <User size={18} />
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="full_name"
-                  value={profileForm.full_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
-                  className="form-input"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phone" className="form-label">
-                  <Phone size={18} />
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={profileForm.phone}
-                  onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                  className="form-input"
-                  placeholder="+55 (11) 98765-4321"
-                  disabled={loading}
-                />
-              </div>
-
-              <button type="submit" disabled={loading} className="btn-primary">
-                <Save size={18} />
-                {loading ? 'Saving...' : 'Save Changes'}
-              </button>
-            </form>
           </div>
         )}
 

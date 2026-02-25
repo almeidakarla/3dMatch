@@ -398,34 +398,36 @@ export default function ArtistProfile() {
         {/* Right Column - Form */}
         <div className="profile-form-section">
           <form onSubmit={handleSave}>
-            <div className="form-group">
-              <label className="form-label">Full Name *</label>
-              <input
-                type="text"
-                value={profile.full_name}
-                onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                placeholder="Your full name"
-                required
-                className={`form-input ${validationErrors.full_name ? 'error' : ''}`}
-              />
-              {validationErrors.full_name && (
-                <p className="form-error">{validationErrors.full_name}</p>
-              )}
-            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Full Name *</label>
+                <input
+                  type="text"
+                  value={profile.full_name}
+                  onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                  placeholder="Your full name"
+                  required
+                  className={`form-input ${validationErrors.full_name ? 'error' : ''}`}
+                />
+                {validationErrors.full_name && (
+                  <p className="form-error">{validationErrors.full_name}</p>
+                )}
+              </div>
 
-            <div className="form-group">
-              <label className="form-label">Years of 3D Experience *</label>
-              <input
-                type="number"
-                min="0"
-                max="50"
-                value={profile.years_experience}
-                onChange={(e) => setProfile({ ...profile, years_experience: parseInt(e.target.value) || 0 })}
-                placeholder="Ex: 5"
-                required
-                className="form-input"
-              />
-              <p className="form-hint">How many years have you worked with 3D rendering?</p>
+              <div className="form-group">
+                <label className="form-label">Years of 3D Experience *</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="50"
+                  value={profile.years_experience}
+                  onChange={(e) => setProfile({ ...profile, years_experience: parseInt(e.target.value) || 0 })}
+                  placeholder="Ex: 5"
+                  required
+                  className="form-input"
+                />
+                <p className="form-hint">How many years have you worked with 3D rendering?</p>
+              </div>
             </div>
 
             <div className="form-group">

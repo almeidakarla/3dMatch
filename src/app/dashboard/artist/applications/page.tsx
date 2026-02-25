@@ -27,9 +27,9 @@ interface ApplicationData {
 const statusBadges: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'badge-pending' },
   accepted: { label: 'Accepted', className: 'badge-accepted' },
-  rejected: { label: 'Rejected', className: 'badge-rejected' },
-  withdrawn: { label: 'Withdrawn', className: 'badge-rejected' },
-  completed: { label: 'Completed', className: 'badge-accepted' },
+  rejected: { label: 'Declined', className: 'badge-declined' },
+  withdrawn: { label: 'Withdrawn', className: 'badge-declined' },
+  completed: { label: 'Completed', className: 'badge-completed' },
 }
 
 export default function MyApplicationsPage() {
@@ -163,7 +163,7 @@ export default function MyApplicationsPage() {
             className={`filter-tab ${filter === tab ? 'active' : ''}`}
             onClick={() => setFilter(tab)}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
+            {tab === 'rejected' ? 'Declined' : tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
           </button>
         ))}
       </div>
