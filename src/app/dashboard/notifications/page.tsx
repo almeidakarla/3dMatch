@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 import {
   Bell,
+  Briefcase,
   CheckCircle,
   XCircle,
   MessageSquare,
@@ -202,6 +203,8 @@ export default function NotificationsPage() {
     switch (type) {
       case 'new_application':
         return <FileText {...iconProps} />
+      case 'project_invite':
+        return <Briefcase {...iconProps} className="text-primary" />
       case 'application_accepted':
         return <CheckCircle {...iconProps} className="text-success" />
       case 'application_rejected':

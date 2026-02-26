@@ -175,6 +175,7 @@ export default function ViewArtistProfilePage() {
 
       const project = myProjects.find((p) => p.id === projectId)
 
+      // Send message
       await supabase
         .from('messages')
         .insert({
@@ -182,6 +183,18 @@ export default function ViewArtistProfilePage() {
           sender_id: user!.id,
           receiver_id: artistId,
           content: `Hello! I would like to invite you to apply for my project: "${project?.title}". Please check the details and submit your proposal!`,
+          is_read: false,
+        })
+
+      // Create notification for the artist
+      await supabase
+        .from('notifications')
+        .insert({
+          user_id: artistId,
+          type: 'project_invite',
+          title: 'New Project Invitation',
+          message: `You've been invited to apply for the project "${project?.title}"`,
+          link: '/dashboard/artist/browse-projects',
           is_read: false,
         })
 

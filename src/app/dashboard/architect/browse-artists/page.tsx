@@ -166,6 +166,18 @@ export default function BrowseArtistsPage() {
           is_read: false,
         })
 
+      // Create notification for the artist
+      await supabase
+        .from('notifications')
+        .insert({
+          user_id: selectedArtist.id,
+          type: 'project_invite',
+          title: 'New Project Invitation',
+          message: `You've been invited to apply for the project "${project?.title}"`,
+          link: '/dashboard/artist/browse-projects',
+          is_read: false,
+        })
+
       alert('Invitation sent successfully!')
       setShowProjectModal(false)
       setSelectedArtist(null)
