@@ -3898,6 +3898,199 @@ select.form-input {
   }
 }
 
+/* View Artist Profile - Project Selection Modal */
+.view-artist-profile .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-xl);
+}
+
+.view-artist-profile .modal-overlay .modal-content {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode .view-artist-profile .modal-overlay .modal-content {
+  background: var(--color-dark-surface);
+}
+
+.view-artist-profile .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.dark-mode .view-artist-profile .modal-header {
+  border-bottom-color: var(--color-gray-700);
+}
+
+.view-artist-profile .modal-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .view-artist-profile .modal-header h3 {
+  color: var(--color-white);
+}
+
+.view-artist-profile .close-button {
+  width: 36px;
+  height: 36px;
+  background: var(--color-gray-100);
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.view-artist-profile .close-button:hover {
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
+}
+
+.dark-mode .view-artist-profile .close-button {
+  background: var(--color-gray-700);
+  color: var(--color-gray-400);
+}
+
+.dark-mode .view-artist-profile .close-button:hover {
+  background: var(--color-gray-600);
+  color: var(--color-white);
+}
+
+.view-artist-profile .modal-body {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+}
+
+.view-artist-profile .modal-instruction {
+  color: var(--color-gray-600);
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: var(--font-size-sm);
+}
+
+.dark-mode .view-artist-profile .modal-instruction {
+  color: var(--color-gray-400);
+}
+
+.view-artist-profile .projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.view-artist-profile .project-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-200);
+  transition: all 0.2s;
+}
+
+.view-artist-profile .project-option:hover {
+  border-color: var(--color-primary);
+  background: var(--color-gray-100);
+}
+
+.dark-mode .view-artist-profile .project-option {
+  background: var(--color-gray-800);
+  border-color: var(--color-gray-700);
+}
+
+.dark-mode .view-artist-profile .project-option:hover {
+  border-color: var(--color-primary);
+  background: var(--color-gray-700);
+}
+
+.view-artist-profile .project-option-info {
+  flex: 1;
+}
+
+.view-artist-profile .project-option-info h4 {
+  margin: 0 0 4px 0;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .view-artist-profile .project-option-info h4 {
+  color: var(--color-white);
+}
+
+.view-artist-profile .project-status {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: var(--radius-2xl);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.dark-mode .view-artist-profile .project-status {
+  background: #065f46;
+  color: #6ee7b7;
+}
+
+.view-artist-profile .btn-select-project {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.view-artist-profile .btn-select-project:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.view-artist-profile .empty-projects {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.view-artist-profile .empty-projects p {
+  color: var(--color-gray-600);
+  margin: 0 0 var(--spacing-lg) 0;
+}
+
+.dark-mode .view-artist-profile .empty-projects p {
+  color: var(--color-gray-400);
+}
+
 /* ==================== APPLICATIONS LIST ==================== */
 .applications-list {
   display: flex;

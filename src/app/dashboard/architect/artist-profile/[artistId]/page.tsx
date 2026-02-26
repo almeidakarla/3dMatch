@@ -125,11 +125,11 @@ export default function ViewArtistProfilePage() {
         .single()
 
       if (existingConv) {
-        router.push('/dashboard/messages')
+        router.push(`/dashboard/messages?conversationId=${existingConv.id}`)
         return
       }
 
-      const { error } = await supabase
+      const { data: newConv, error } = await supabase
         .from('conversations')
         .insert({
           participant1_id: user!.id,
@@ -141,7 +141,7 @@ export default function ViewArtistProfilePage() {
 
       if (error) throw error
 
-      router.push('/dashboard/messages')
+      router.push(`/dashboard/messages?conversationId=${newConv.id}`)
     } catch (error) {
       console.error('Error creating conversation:', error)
       alert('Error starting conversation. Please try again.')
