@@ -5523,6 +5523,29 @@ select.form-input {
   color: #fef3c7;
 }
 
+.badge-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.invited-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: var(--radius-2xl);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.dark-mode .invited-badge {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
 .project-card-title {
   font-size: 1.25rem;
   font-weight: 600;

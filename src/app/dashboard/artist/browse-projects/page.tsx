@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
-import { Calendar, DollarSign, Tag, Search, ArrowRight, X } from 'lucide-react'
+import { Calendar, DollarSign, Tag, Search, ArrowRight, X, Mail } from 'lucide-react'
 import ApplicationModal from '@/components/artist/ApplicationModal'
 
 interface ProjectData {
@@ -44,6 +44,7 @@ export default function BrowseProjectsPage() {
   const [message, setMessage] = useState('')
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
   const [showApplicationModal, setShowApplicationModal] = useState(false)
+  const [invitedProjectIds, setInvitedProjectIds] = useState<Set<string>>(new Set())
 
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -120,9 +121,39 @@ export default function BrowseProjectsPage() {
       }
     }
 
+    const loadInvites = async () => {
+      if (!profile?.id) return
+
+      try {
+        const { data: inviteNotifications, error } = await supabase
+          .from('notifications')
+          .select('link')
+          .eq('user_id', profile.id)
+          .eq('type', 'project_invite')
+
+        if (error) throw error
+
+        // Extract project IDs from notification links
+        const projectIds = new Set<string>()
+        inviteNotifications?.forEach((notif) => {
+          if (notif.link) {
+            const match = notif.link.match(/invited=([^&]+)/)
+            if (match) {
+              projectIds.add(match[1])
+            }
+          }
+        })
+
+        setInvitedProjectIds(projectIds)
+      } catch (error) {
+        console.error('Error loading invites:', error)
+      }
+    }
+
     loadProjects()
+    loadInvites()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [profile?.id])
 
   const filterProjects = useCallback(() => {
     let filtered = [...projects]
@@ -320,6 +351,7 @@ export default function BrowseProjectsPage() {
           {filteredProjects.map((project) => {
             const daysLeft = getDaysUntilDeadline(project.deadline)
             const isUrgent = daysLeft <= 7
+            const isInvited = invitedProjectIds.has(project.id)
 
             return (
               <div key={project.id} className="project-card">
@@ -328,7 +360,15 @@ export default function BrowseProjectsPage() {
                     <Tag size={14} />
                     {getCategoryLabel(project.category)}
                   </div>
-                  {isUrgent && <div className="urgent-badge">Urgent</div>}
+                  <div className="badge-group">
+                    {isInvited && (
+                      <div className="invited-badge">
+                        <Mail size={14} />
+                        Invited
+                      </div>
+                    )}
+                    {isUrgent && <div className="urgent-badge">Urgent</div>}
+                  </div>
                 </div>
 
                 <h3 className="project-card-title">{project.title}</h3>

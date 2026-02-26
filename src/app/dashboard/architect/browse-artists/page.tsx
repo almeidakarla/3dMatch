@@ -174,7 +174,7 @@ export default function BrowseArtistsPage() {
           type: 'project_invite',
           title: 'New Project Invitation',
           message: `You've been invited to apply for the project "${project?.title}"`,
-          link: '/dashboard/artist/browse-projects',
+          link: `/dashboard/artist/browse-projects?invited=${projectId}`,
           is_read: false,
         })
 
