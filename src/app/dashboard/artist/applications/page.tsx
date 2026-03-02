@@ -27,7 +27,7 @@ interface ApplicationData {
 const statusBadges: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'badge-pending' },
   accepted: { label: 'Accepted', className: 'badge-accepted' },
-  rejected: { label: 'Declined', className: 'badge-declined' },
+  rejected: { label: 'Not Picked', className: 'badge-declined' },
   withdrawn: { label: 'Withdrawn', className: 'badge-declined' },
   completed: { label: 'Completed', className: 'badge-completed' },
 }
@@ -164,7 +164,7 @@ export default function MyApplicationsPage() {
             className={`filter-tab ${filter === tab ? 'active' : ''}`}
             onClick={() => setFilter(tab)}
           >
-            {tab === 'rejected' ? 'Declined' : tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
+            {tab === 'rejected' ? 'Not Picked' : tab.charAt(0).toUpperCase() + tab.slice(1)} ({counts[tab]})
           </button>
         ))}
       </div>
@@ -248,7 +248,7 @@ export default function MyApplicationsPage() {
 
                   {app.status === 'rejected' && app.rejection_reason && (
                     <div className="status-message error">
-                      <strong>Reason for rejection:</strong>
+                      <strong>Feedback:</strong>
                       <p>{app.rejection_reason}</p>
                     </div>
                   )}
