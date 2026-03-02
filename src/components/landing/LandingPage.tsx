@@ -169,6 +169,14 @@ const getFeatureIcon = (iconType?: string) => {
   }
 };
 
+// Stock photos for featured artists (fallback when no avatarUrl provided)
+const artistStockPhotos: Record<string, string> = {
+  'Lucas M.': 'https://randomuser.me/api/portraits/men/32.jpg',
+  'Sofia R.': 'https://randomuser.me/api/portraits/women/44.jpg',
+  'Marco T.': 'https://randomuser.me/api/portraits/men/67.jpg',
+  'Ana K.': 'https://randomuser.me/api/portraits/women/65.jpg',
+};
+
 // Default fallback data
 const defaultData: LandingPageData = {
   heroImages: ['/bg-img-1.png', '/bg-img-2.png', '/bg-img-3.png', '/bg-img-4.png', '/bg-img-5.png'],
@@ -739,7 +747,7 @@ const LandingPage = ({ data }: LandingPageProps) => {
                     <div className="artist-card-header">
                       <div className="artist-avatar">
                         <img
-                          src={artist.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.name)}&size=100&background=667eea&color=fff`}
+                          src={artist.avatarUrl || artistStockPhotos[artist.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.name)}&size=100&background=667eea&color=fff`}
                           alt={artist.name}
                           onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                             e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(artist.name) + '&size=100&background=667eea&color=fff';
