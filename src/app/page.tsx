@@ -6,6 +6,47 @@ import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import LandingPage from '@/components/landing/LandingPage'
 
+// JSON-LD structured data for SEO and AI understanding
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '3DMatch',
+  description: 'Marketplace platform connecting architects and designers with talented 3D visualization artists for architectural rendering projects.',
+  url: 'https://3dmatch.app',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  offers: {
+    '@type': 'Offer',
+    description: 'Connect with 3D artists for architectural visualization',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  provider: {
+    '@type': 'Organization',
+    name: '3DMatch',
+    url: 'https://3dmatch.app',
+  },
+  audience: [
+    {
+      '@type': 'Audience',
+      audienceType: 'Architects',
+    },
+    {
+      '@type': 'Audience',
+      audienceType: 'Interior Designers',
+    },
+    {
+      '@type': 'Audience',
+      audienceType: '3D Artists',
+    },
+    {
+      '@type': 'Audience',
+      audienceType: 'Real Estate Developers',
+    },
+  ],
+  keywords: '3D rendering, architectural visualization, 3D artist, hire 3D artist, architectural rendering, interior rendering, 3D freelancer',
+}
+
 // Query for the singleton landing page document
 const LANDING_PAGE_QUERY = `*[_type == "landingPage"][0]{
   // Hero Section
@@ -112,5 +153,13 @@ export default async function HomePage() {
   const rawData = await client.fetch(LANDING_PAGE_QUERY, {}, options)
   const landingData = transformImages(rawData)
 
-  return <LandingPage data={landingData} />
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <LandingPage data={landingData} />
+    </>
+  )
 }

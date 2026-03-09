@@ -1,0 +1,49 @@
+# 3DMatch - Connect Architects with 3D Artists
+
+> 3DMatch is a marketplace platform that connects architects, interior designers, and real estate developers with talented 3D visualization artists.
+
+## What is 3DMatch?
+
+3DMatch is an online platform that helps:
+- **Architects and Designers** find and hire skilled 3D rendering artists for architectural visualization projects
+- **3D Artists** find freelance work and clients in the architecture and real estate industry
+
+## Services
+
+### For Architects & Designers
+- Post visualization projects and receive proposals from vetted 3D artists
+- Browse portfolios of qualified 3D rendering professionals
+- Secure payment system with milestone-based releases
+- Direct communication with artists
+- Project management tools
+
+### For 3D Artists
+- Find freelance architectural visualization projects
+- Build your portfolio and showcase your work
+- Get paid securely through the platform
+- Connect with architects and design firms worldwide
+
+## How It Works
+
+1. **Architects** post a project with requirements (renders, style, deadline)
+2. **Artists** submit proposals with pricing and timeline
+3. **Architect** selects an artist and pays 50% upfront
+4. **Artist** delivers the work in up to 3 revision rounds
+5. **Architect** approves and releases final 50% payment
+
+## Target Audience
+
+- Architectural firms
+- Interior design studios
+- Real estate developers
+- 3D visualization artists
+- Architectural rendering freelancers
+
+## Contact
+
+- Website: https://3dmatch.app
+- Email: contact@3dmatch.app
+
+## Keywords
+
+3D rendering, architectural visualization, 3D artist marketplace, hire 3D artist, architectural rendering services, interior visualization, real estate rendering, 3D freelancer platform
