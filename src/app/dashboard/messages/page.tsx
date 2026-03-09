@@ -14,6 +14,29 @@ import MediaMessage from '@/components/messages/MediaMessage'
 import { formatPrivateName } from '@/utils/nameFormatter'
 import { getTypingWarning, sanitizeContent } from '@/utils/contentFilter'
 
+// Helper to render message content with clickable links
+function renderMessageWithLinks(content: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  const parts = content.split(urlRegex)
+
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#60a5fa', textDecoration: 'underline', wordBreak: 'break-all' }}
+        >
+          {part}
+        </a>
+      )
+    }
+    return part
+  })
+}
+
 function MessagesContent() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
@@ -297,7 +320,7 @@ function MessagesContent() {
                       {!isOwn && !showAvatar && <div className="modern-message-avatar-spacer" />}
                       {message.media_url ? <MediaMessage message={message} isOwn={isOwn} /> : (
                         <div className="modern-message-bubble">
-                          <div className="modern-message-content">{message.content}</div>
+                          <div className="modern-message-content">{renderMessageWithLinks(message.content)}</div>
                           {showTime && (
                             <div className="modern-message-meta">
                               <span className="modern-message-time">{new Date(message.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>

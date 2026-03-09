@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { notifyUser } from '@/lib/notifications'
 import { CheckCircle, XCircle, Clock, User, Award, Calendar } from 'lucide-react'
 
 interface ArtistProfile {
@@ -55,6 +56,7 @@ export default function ArtistProfileReviewPage() {
   const handleReview = async (profileId: string, status: string) => {
     setReviewing(true)
     try {
+      const profile = profiles.find(p => p.id === profileId)
       const updateData = {
         approval_status: status,
         approved_by: user?.id,
@@ -64,13 +66,15 @@ export default function ArtistProfileReviewPage() {
       const { error } = await supabase.from('profiles').update(updateData).eq('id', profileId)
       if (error) throw error
 
-      await supabase.from('notifications').insert({
-        user_id: profileId,
+      await notifyUser({
+        supabase,
+        userId: profileId,
+        userEmail: profile?.email,
+        userName: profile?.full_name,
         type: status === 'approved' ? 'application_accepted' : 'application_rejected',
         title: status === 'approved' ? 'Profile Approved!' : 'Profile Not Approved',
         message: status === 'approved' ? 'Your profile has been approved! You can now start working on the platform.' : `Your profile was not approved. ${reviewNotes || 'Contact support for more information.'}`,
         link: '/dashboard/artist/profile',
-        is_read: false
       })
 
       await loadProfiles()

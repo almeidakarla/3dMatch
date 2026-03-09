@@ -20,11 +20,13 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 import { formatPrivateName } from '@/utils/nameFormatter'
+import { notifyUser } from '@/lib/notifications'
 import { Search, User } from 'lucide-react'
 
 interface Artist {
   id: string
   full_name: string
+  email?: string
   profile_photo?: string
   location?: string
   user_type: string
@@ -162,21 +164,21 @@ export default function BrowseArtistsPage() {
           conversation_id: conversationId,
           sender_id: user!.id,
           receiver_id: selectedArtist.id,
-          content: `Hello! I would like to invite you to apply for my project: "${project?.title}". Please check the details and submit your proposal!`,
+          content: `Hello! I would like to invite you to apply for my project: "${project?.title}". View details and submit your proposal here: ${window.location.origin}/dashboard/artist/browse-projects?invited=${projectId}`,
           is_read: false,
         })
 
-      // Create notification for the artist
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: selectedArtist.id,
-          type: 'project_invite',
-          title: 'New Project Invitation',
-          message: `You've been invited to apply for the project "${project?.title}"`,
-          link: `/dashboard/artist/browse-projects?invited=${projectId}`,
-          is_read: false,
-        })
+      // Create in-app + email notification for the artist
+      await notifyUser({
+        supabase,
+        userId: selectedArtist.id,
+        userEmail: selectedArtist.email,
+        userName: selectedArtist.full_name,
+        type: 'project_invite',
+        title: 'New Project Invitation',
+        message: `You've been invited to apply for the project "${project?.title}"`,
+        link: `/dashboard/artist/browse-projects?invited=${projectId}`,
+      })
 
       alert('Invitation sent successfully!')
       setShowProjectModal(false)

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { notifyUser } from '@/lib/notifications'
 import {
   ArrowLeft, MessageSquare,
   CheckCircle, Clock, AlertCircle, Upload, ChevronDown, ChevronUp
@@ -42,7 +43,7 @@ interface Application {
   revision_requests?: RevisionRequest[]
   current_round?: number
   updated_at: string
-  artist?: { id: string; full_name: string; location?: string }
+  artist?: { id: string; full_name: string; email?: string; location?: string }
 }
 
 interface Project {
@@ -57,7 +58,7 @@ interface Project {
   reference_images?: string[]
   architect_id: string
   created_at: string
-  architect?: { id: string; full_name: string; location?: string }
+  architect?: { id: string; full_name: string; email?: string; location?: string }
 }
 
 export default function ProjectOverview() {
@@ -90,7 +91,7 @@ export default function ProjectOverview() {
       setLoading(true)
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
-        .select(`*, architect:profiles!projects_architect_id_fkey (id, full_name, location)`)
+        .select(`*, architect:profiles!projects_architect_id_fkey (id, full_name, email, location)`)
         .eq('id', id)
         .single()
 
@@ -101,7 +102,7 @@ export default function ProjectOverview() {
 
       const { data: appData, error: appError } = await supabase
         .from('applications')
-        .select(`*, artist:profiles!applications_artist_id_fkey (id, full_name, location)`)
+        .select(`*, artist:profiles!applications_artist_id_fkey (id, full_name, email, location)`)
         .eq('project_id', id)
         .in('status', ['accepted', 'accepted_paid', 'in_progress', 'submitted', 'completed'])
         .maybeSingle()
@@ -162,12 +163,15 @@ export default function ProjectOverview() {
         current_round: currentRound + 1
       }).eq('id', application.id)
 
-      await supabase.from('notifications').insert({
-        user_id: application.artist_id,
+      await notifyUser({
+        supabase,
+        userId: application.artist_id,
+        userEmail: application.artist?.email,
+        userName: application.artist?.full_name,
         type: 'revision_requested',
         title: 'Revision Requested',
         message: `Revision requested for "${project.title}"`,
-        link: `/dashboard/artist/project/${id}`
+        link: `/dashboard/artist/project/${id}`,
       })
 
       alert(`Revision requested! Round ${currentRound + 1}/3`)
@@ -216,14 +220,15 @@ export default function ProjectOverview() {
       if (rpcError) throw new Error(`Error saving delivery: ${rpcError.message}`)
       if (!result?.success) throw new Error(result?.error || 'Unknown error saving delivery')
 
-      await supabase.from('notifications').insert({
-        user_id: project.architect_id,
+      await notifyUser({
+        supabase,
+        userId: project.architect_id,
+        userEmail: project.architect?.email,
+        userName: project.architect?.full_name,
         type: 'project_delivered',
         title: 'Project Delivered',
         message: `The artist delivered Round ${result.round} of project "${project.title}"`,
         link: `/dashboard/architect/project/${id}`,
-        is_read: false,
-        created_at: new Date().toISOString()
       })
 
       alert(`Round ${result.round} delivered successfully!`)

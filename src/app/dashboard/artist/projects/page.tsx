@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { notifyUser } from '@/lib/notifications'
 
 interface ProjectItem {
   id: string
@@ -13,7 +14,7 @@ interface ProjectItem {
   description: string
   deadline: string
   status: string
-  architect: { id: string; full_name: string }
+  architect: { id: string; full_name: string; email?: string }
   quoted_price: number
   delivery_timeline: number
   delivery_status: string
@@ -54,7 +55,7 @@ export default function ActiveProjectsPage() {
           current_round, revision_requests, status, created_at,
           projects (
             id, title, description, deadline, architect_id,
-            profiles!projects_architect_id_fkey ( id, full_name )
+            profiles!projects_architect_id_fkey ( id, full_name, email )
           )
         `)
         .eq('artist_id', user.id)
@@ -171,14 +172,15 @@ export default function ActiveProjectsPage() {
 
       if (updateError) throw updateError
 
-      await supabase.from('notifications').insert({
-        user_id: selectedProject.architect.id,
+      await notifyUser({
+        supabase,
+        userId: selectedProject.architect.id,
+        userEmail: selectedProject.architect.email,
+        userName: selectedProject.architect.full_name,
         type: 'project_delivered',
         title: 'Project Delivered',
         message: `The artist delivered Round ${deliveryForm.round} of project "${selectedProject.title}"`,
         link: `/dashboard/architect/project/${selectedProject.id}`,
-        is_read: false,
-        created_at: new Date().toISOString(),
       })
 
       setMessage(`Round ${deliveryForm.round} delivered successfully! Awaiting client approval.`)

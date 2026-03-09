@@ -9,6 +9,29 @@ import MediaUpload from '@/components/messages/MediaUpload'
 import MediaMessage from '@/components/messages/MediaMessage'
 import { getTypingWarning, sanitizeContent } from '@/utils/contentFilter'
 
+// Helper to render message content with clickable links
+function renderMessageWithLinks(content: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  const parts = content.split(urlRegex)
+
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#60a5fa', textDecoration: 'underline', wordBreak: 'break-all' }}
+        >
+          {part}
+        </a>
+      )
+    }
+    return part
+  })
+}
+
 interface MessagesProps {
   conversationId?: string
   otherUserId: string
@@ -114,7 +137,7 @@ export default function Messages({ otherUserId, projectId }: MessagesProps) {
               <div key={message.id} className={`embedded-message-wrapper ${isOwn ? 'own' : 'other'}`}>
                 {message.media_url ? <MediaMessage message={message} isOwn={isOwn} /> : (
                   <div className="embedded-message-bubble">
-                    <div className="embedded-message-content">{message.content}</div>
+                    <div className="embedded-message-content">{renderMessageWithLinks(message.content)}</div>
                     <div className="embedded-message-meta">
                       <span className="embedded-message-time">{new Date(message.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                       {isOwn && <span className="embedded-message-status">{message.is_read ? <CheckCheck size={14} className="read" /> : <Check size={14} className="sent" />}</span>}

@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 import PaymentModal from '@/components/shared/PaymentModal'
 import { formatPrivateName } from '@/utils/nameFormatter'
+import { notifyUser } from '@/lib/notifications'
 
 interface ApplicationItem {
   id: string
@@ -17,7 +18,7 @@ interface ApplicationItem {
   rejection_reason?: string
   created_at: string
   project: { id: string; title: string; budget: number; currency: string; deadline: string; architect_id: string }
-  artist: { id: string; full_name: string; profile_photo: string; location: string; bio: string; base_rate: number }
+  artist: { id: string; full_name: string; email: string; profile_photo: string; location: string; bio: string; base_rate: number }
 }
 
 export default function ApplicationsReceivedPage() {
@@ -42,7 +43,7 @@ export default function ApplicationsReceivedPage() {
 
       const { data, error } = await supabase
         .from('applications')
-        .select(`*, project:project_id ( id, title, budget, currency, deadline, architect_id ), artist:artist_id ( id, full_name, profile_photo, location, bio, base_rate )`)
+        .select(`*, project:project_id ( id, title, budget, currency, deadline, architect_id ), artist:artist_id ( id, full_name, email, profile_photo, location, bio, base_rate )`)
         .in('project_id', projectIds)
         .order('created_at', { ascending: false })
       if (error) throw error
@@ -66,9 +67,25 @@ export default function ApplicationsReceivedPage() {
 
   const handleReject = async (applicationId: string) => {
     const reason = window.prompt('Reason for rejection (optional):')
+    const application = applications.find(app => app.id === applicationId)
     try {
       const { error } = await supabase.from('applications').update({ status: 'rejected', rejection_reason: reason || null }).eq('id', applicationId)
       if (error) throw error
+
+      // Send in-app + email notification to artist
+      if (application) {
+        await notifyUser({
+          supabase,
+          userId: application.artist_id,
+          userEmail: application.artist.email,
+          userName: application.artist.full_name,
+          type: 'application_rejected',
+          title: 'Application Not Selected',
+          message: `Your application for "${application.project.title}" was not selected.${reason ? ` Reason: ${reason}` : ''}`,
+          link: '/dashboard/artist/applications',
+        })
+      }
+
       setMessage('Application rejected')
       await loadApplications()
       setTimeout(() => setMessage(''), 3000)
@@ -83,6 +100,18 @@ export default function ApplicationsReceivedPage() {
     try {
       if (selectedApplication) {
         await supabase.from('applications').update({ status: 'accepted' }).eq('id', selectedApplication.id).select()
+
+        // Send in-app + email notification to artist
+        await notifyUser({
+          supabase,
+          userId: selectedApplication.artist_id,
+          userEmail: selectedApplication.artist.email,
+          userName: selectedApplication.artist.full_name,
+          type: 'application_accepted',
+          title: 'Application Accepted!',
+          message: `Congratulations! Your application for "${selectedApplication.project.title}" has been accepted. You can now start working on the project.`,
+          link: `/dashboard/artist/project/${selectedApplication.project.id}`,
+        })
       }
       setMessage('Payment completed! Artist accepted successfully.')
       await loadApplications()
