@@ -45,7 +45,8 @@ export default async function BlogPage() {
 
   return (
     <PublicLayout>
-      <div className="blog-listing-container">
+      <div className="blog-page-wrapper">
+        <div className="blog-listing-container">
         <div className="blog-header">
           <h1 className="blog-title">3dMatch Blog</h1>
           <p className="blog-subtitle">Insights, tips, and inspiration for 3D artists and design professionals</p>
@@ -79,6 +80,7 @@ export default async function BlogPage() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </PublicLayout>
   )
