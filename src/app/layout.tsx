@@ -37,10 +37,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: '3DMatch — Connect Architects with 3D Artists',
+    default: '3DMatch | Hire 3D Artists for Architecture',
     template: '%s | 3DMatch',
   },
-  description: 'Find and hire talented 3D visualization artists for your architectural projects. 3DMatch connects architects, interior designers, and real estate developers with skilled 3D rendering artists.',
+  description: '3DMatch is the marketplace for architectural 3D rendering. Hire vetted 3D visualization artists for interior renders, exterior renders, and animations. Post projects free.',
   keywords: ['3D rendering', '3D visualization', 'architectural visualization', '3D artist', 'hire 3D artist', 'architectural rendering', 'interior rendering', '3D freelancer', 'rendering services'],
   authors: [{ name: '3DMatch' }],
   creator: '3DMatch',
@@ -54,21 +54,21 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://3dmatch.app',
     siteName: '3DMatch',
-    title: '3DMatch — Connect Architects with 3D Artists',
-    description: 'Find and hire talented 3D visualization artists for your architectural projects. Connect with skilled 3D rendering professionals.',
+    title: '3DMatch | Hire 3D Artists for Architecture',
+    description: '3DMatch is the marketplace for architectural 3D rendering. Hire vetted 3D visualization artists for interior renders, exterior renders, and animations.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: '3DMatch - Connect Architects with 3D Artists',
+        alt: '3DMatch - Hire 3D Artists for Architectural Visualization',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '3DMatch — Connect Architects with 3D Artists',
-    description: 'Find and hire talented 3D visualization artists for your architectural projects.',
+    title: '3DMatch | Hire 3D Artists for Architecture',
+    description: '3DMatch is the marketplace for architectural 3D rendering. Hire vetted 3D visualization artists.',
     images: ['/og-image.png'],
   },
   robots: {
