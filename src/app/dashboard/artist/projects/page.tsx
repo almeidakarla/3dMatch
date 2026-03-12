@@ -14,7 +14,7 @@ interface ProjectItem {
   description: string
   deadline: string
   status: string
-  architect: { id: string; full_name: string; email?: string }
+  architect: { id: string; full_name: string }
   quoted_price: number
   delivery_timeline: number
   delivery_status: string
@@ -55,7 +55,7 @@ export default function ActiveProjectsPage() {
           current_round, revision_requests, status, created_at,
           projects (
             id, title, description, deadline, architect_id,
-            profiles!projects_architect_id_fkey ( id, full_name, email )
+            profiles!projects_architect_id_fkey ( id, full_name )
           )
         `)
         .eq('artist_id', user.id)
@@ -175,7 +175,6 @@ export default function ActiveProjectsPage() {
       await notifyUser({
         supabase,
         userId: selectedProject.architect.id,
-        userEmail: selectedProject.architect.email,
         userName: selectedProject.architect.full_name,
         type: 'project_delivered',
         title: 'Project Delivered',

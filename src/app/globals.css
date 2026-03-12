@@ -2343,6 +2343,97 @@ body.dark-mode label {
   text-decoration: underline;
 }
 
+/* Email Confirmation Card */
+.confirmation-card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-4xl);
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.dark-mode .confirmation-card {
+  background: var(--color-dark-surface);
+}
+
+.confirmation-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--color-primary), #00c4b4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.confirmation-icon span {
+  font-size: 36px;
+  filter: brightness(0) invert(1);
+}
+
+.confirmation-card h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.dark-mode .confirmation-card h1 {
+  color: var(--color-white);
+}
+
+.confirmation-text {
+  color: var(--color-gray-600);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.dark-mode .confirmation-text {
+  color: var(--color-gray-400);
+}
+
+.confirmation-email {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--color-primary);
+  word-break: break-all;
+  margin-bottom: 24px;
+}
+
+.confirmation-tip {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.dark-mode .confirmation-tip {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.confirmation-tip p {
+  color: var(--color-gray-700);
+  font-size: 14px;
+  margin: 0;
+}
+
+.dark-mode .confirmation-tip p {
+  color: var(--color-gray-300);
+}
+
+.confirmation-footer {
+  color: var(--color-gray-500);
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+.dark-mode .confirmation-footer {
+  color: var(--color-gray-400);
+}
+
 /* ==================== FORM STYLES ==================== */
 .profile-form {
   max-width: 600px;
@@ -12304,6 +12395,167 @@ select.form-input {
 
 .dark-mode .empty-state-text {
   color: #d1d9e6 !important;
+}
+
+/* ==================== PROFILE COMPLETION PROMPT ==================== */
+.profile-completion-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px;
+}
+
+.prompt-content {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: 60px 50px;
+  max-width: 550px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .prompt-content {
+  background: var(--color-dark-surface);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.prompt-content svg {
+  margin-bottom: 24px;
+}
+
+.prompt-content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.dark-mode .prompt-content h2 {
+  color: var(--color-white);
+}
+
+.prompt-message {
+  font-size: 16px;
+  color: var(--color-gray-600);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.dark-mode .prompt-message {
+  color: var(--color-gray-400);
+}
+
+.prompt-submessage {
+  font-size: 14px;
+  color: var(--color-gray-500);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.dark-mode .prompt-submessage {
+  color: var(--color-gray-500);
+}
+
+.status-icon-pending {
+  color: var(--color-warning);
+}
+
+.status-icon-approved {
+  color: var(--color-success);
+}
+
+.status-icon-rejected {
+  color: var(--color-error);
+}
+
+.review-notes {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.dark-mode .review-notes {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.review-notes h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  margin-bottom: 8px;
+}
+
+.dark-mode .review-notes h4 {
+  color: var(--color-gray-300);
+}
+
+.review-notes p {
+  font-size: 14px;
+  color: var(--color-gray-600);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.dark-mode .review-notes p {
+  color: var(--color-gray-400);
+}
+
+.pending-timeline {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-top: 24px;
+  text-align: left;
+}
+
+.dark-mode .pending-timeline {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pending-timeline h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  margin-bottom: 12px;
+}
+
+.dark-mode .pending-timeline h4 {
+  color: var(--color-gray-300);
+}
+
+.pending-timeline ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.pending-timeline li {
+  font-size: 14px;
+  color: var(--color-gray-600);
+  line-height: 1.8;
+}
+
+.dark-mode .pending-timeline li {
+  color: var(--color-gray-400);
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 16px;
+  margin-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .prompt-content {
+    padding: 40px 24px;
+  }
+
+  .prompt-content h2 {
+    font-size: 24px;
+  }
 }
 
 /* ==================== BLOG LISTING STYLES ==================== */

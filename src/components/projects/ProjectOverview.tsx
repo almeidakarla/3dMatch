@@ -43,7 +43,7 @@ interface Application {
   revision_requests?: RevisionRequest[]
   current_round?: number
   updated_at: string
-  artist?: { id: string; full_name: string; email?: string; location?: string }
+  artist?: { id: string; full_name: string; location?: string }
 }
 
 interface Project {
@@ -58,7 +58,7 @@ interface Project {
   reference_images?: string[]
   architect_id: string
   created_at: string
-  architect?: { id: string; full_name: string; email?: string; location?: string }
+  architect?: { id: string; full_name: string; location?: string }
 }
 
 export default function ProjectOverview() {
@@ -91,7 +91,7 @@ export default function ProjectOverview() {
       setLoading(true)
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
-        .select(`*, architect:profiles!projects_architect_id_fkey (id, full_name, email, location)`)
+        .select(`*, architect:profiles!projects_architect_id_fkey (id, full_name, location)`)
         .eq('id', id)
         .single()
 
@@ -102,7 +102,7 @@ export default function ProjectOverview() {
 
       const { data: appData, error: appError } = await supabase
         .from('applications')
-        .select(`*, artist:profiles!applications_artist_id_fkey (id, full_name, email, location)`)
+        .select(`*, artist:profiles!applications_artist_id_fkey (id, full_name, location)`)
         .eq('project_id', id)
         .in('status', ['accepted', 'accepted_paid', 'in_progress', 'submitted', 'completed'])
         .maybeSingle()
@@ -166,7 +166,6 @@ export default function ProjectOverview() {
       await notifyUser({
         supabase,
         userId: application.artist_id,
-        userEmail: application.artist?.email,
         userName: application.artist?.full_name,
         type: 'revision_requested',
         title: 'Revision Requested',
@@ -223,7 +222,6 @@ export default function ProjectOverview() {
       await notifyUser({
         supabase,
         userId: project.architect_id,
-        userEmail: project.architect?.email,
         userName: project.architect?.full_name,
         type: 'project_delivered',
         title: 'Project Delivered',
