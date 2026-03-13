@@ -135,6 +135,26 @@ export default function ArtistApplicationForm() {
 
       if (submitError) throw submitError
 
+      // Automatically add uploaded images to the artist's portfolio
+      if (formData.portfolio_files.length > 0) {
+        const portfolioEntries = formData.portfolio_files.map((imageUrl, index) => ({
+          artist_id: user?.id,
+          title: `Portfolio Image ${index + 1}`,
+          description: '',
+          technologies: formData.software,
+          image_url: imageUrl
+        }))
+
+        const { error: portfolioError } = await supabase
+          .from('portfolio')
+          .insert(portfolioEntries)
+
+        if (portfolioError) {
+          console.error('Error adding images to portfolio:', portfolioError)
+          // Don't fail the submission, just log the error
+        }
+      }
+
       // Send email notification to admin
       const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL
       if (adminEmail) {
