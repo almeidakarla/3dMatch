@@ -7309,8 +7309,33 @@ select.form-input {
 /* ==================== ARTIST APPLICATION FORM ==================== */
 .artist-application-container {
   min-height: 100vh;
-  background: var(--color-gradient);
   padding: 3rem 1.5rem;
+}
+
+.application-header-simple {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+}
+
+.application-header-simple h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.dark-mode .application-header-simple h1 {
+  color: var(--color-white);
+}
+
+.application-header-simple p {
+  font-size: 1rem;
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+.dark-mode .application-header-simple p {
+  color: var(--color-gray-400);
 }
 
 .application-header {
@@ -7528,20 +7553,22 @@ select.form-input {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(239, 68, 68, 0.95);
   color: var(--color-white);
   border: none;
-  font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
   transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .remove-file-btn:hover {
-  background: var(--color-gray-100);
+  background: #dc2626;
   transform: scale(1.1);
 }
 

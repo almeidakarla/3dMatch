@@ -7,17 +7,13 @@ import { useAuth } from '@/context/AuthContext'
 import { Send, Upload, CheckCircle, AlertCircle, X, Clock } from 'lucide-react'
 
 const SOFTWARE_OPTIONS = ['SketchUp', 'V-Ray', '3ds Max', 'Corona Renderer', 'Unreal Engine', 'Blender', 'Lumion', 'Twinmotion', 'Enscape', 'Other']
-const ARCHITECTURE_STYLES = ['Contemporary', 'Classic', 'Modern', 'Minimalist', 'Industrial', 'Rustic', 'Eclectic', 'Art Deco']
-const PROJECT_TYPES = ['Facade', 'Interiors', 'Landscaping', 'Urban', 'Commercial', 'Residential', 'Industrial']
 
 interface FormData {
-  portfolio_urls: string[]
+  portfolio_url: string
   portfolio_files: string[]
   software: string[]
   other_software: string
   years_experience: number
-  architecture_style: string[]
-  favorite_project_types: string[]
 }
 
 interface ExistingApplication {
@@ -28,8 +24,6 @@ interface ExistingApplication {
   software?: string[]
   other_software?: string
   years_experience?: number
-  architecture_style?: string[]
-  favorite_project_types?: string[]
   rejection_reason?: string
 }
 
@@ -45,13 +39,11 @@ export default function ArtistApplicationForm() {
   const [loading, setLoading] = useState(true)
 
   const [formData, setFormData] = useState<FormData>({
-    portfolio_urls: ['', '', ''],
+    portfolio_url: '',
     portfolio_files: [],
     software: [],
     other_software: '',
-    years_experience: 0,
-    architecture_style: [],
-    favorite_project_types: []
+    years_experience: 0
   })
 
   useEffect(() => {
@@ -69,13 +61,11 @@ export default function ArtistApplicationForm() {
             router.push('/dashboard')
           } else if (data[0].status === 'rejected') {
             setFormData({
-              portfolio_urls: data[0].portfolio_urls || ['', '', ''],
+              portfolio_url: data[0].portfolio_urls?.[0] || '',
               portfolio_files: data[0].portfolio_files || [],
               software: data[0].software || [],
               other_software: data[0].other_software || '',
-              years_experience: data[0].years_experience || 0,
-              architecture_style: data[0].architecture_style || [],
-              favorite_project_types: data[0].favorite_project_types || []
+              years_experience: data[0].years_experience || 0
             })
           }
         }
@@ -86,12 +76,6 @@ export default function ArtistApplicationForm() {
   }, [user, router, supabase])
 
   const toggleArrayItem = (array: string[], item: string) => array.includes(item) ? array.filter(i => i !== item) : [...array, item]
-
-  const handlePortfolioUrlChange = (index: number, value: string) => {
-    const newUrls = [...formData.portfolio_urls]
-    newUrls[index] = value
-    setFormData({ ...formData, portfolio_urls: newUrls })
-  }
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -129,26 +113,22 @@ export default function ArtistApplicationForm() {
     setSubmitting(true); setError('')
 
     if (formData.software.length === 0) { setError('Please select at least one software'); setSubmitting(false); return }
-    if (formData.architecture_style.length === 0) { setError('Please select at least one architecture style'); setSubmitting(false); return }
-    if (formData.favorite_project_types.length === 0) { setError('Please select at least one favorite project type'); setSubmitting(false); return }
 
-    const hasPortfolioUrls = formData.portfolio_urls.some(url => url.trim() !== '')
+    const hasPortfolioUrl = formData.portfolio_url.trim() !== ''
     const hasPortfolioFiles = formData.portfolio_files.length > 0
-    if (!hasPortfolioUrls && !hasPortfolioFiles) { setError('Please provide at least one portfolio link or upload images'); setSubmitting(false); return }
+    if (!hasPortfolioUrl && !hasPortfolioFiles) { setError('Please provide a portfolio link or upload images'); setSubmitting(false); return }
 
     try {
-      const cleanedUrls = formData.portfolio_urls.filter(url => url.trim() !== '')
+      const portfolioUrls = formData.portfolio_url.trim() ? [formData.portfolio_url.trim()] : []
       const { error: submitError } = await supabase.from('artist_submissions').insert({
         user_id: user?.id,
         email: profile?.email || user?.email,
         full_name: profile?.full_name,
-        portfolio_urls: cleanedUrls,
+        portfolio_urls: portfolioUrls,
         portfolio_files: formData.portfolio_files,
         software: formData.software,
         other_software: formData.other_software,
         years_experience: formData.years_experience,
-        architecture_style: formData.architecture_style,
-        favorite_project_types: formData.favorite_project_types,
         status: 'pending'
       })
 
@@ -185,9 +165,9 @@ export default function ArtistApplicationForm() {
 
   return (
     <div className="artist-application-container">
-      <div className="application-header">
+      <div className="application-header-simple">
         <h1>Artist Profile Application</h1>
-        <p className="application-subtitle">Complete your artist profile to start applying for projects.</p>
+        <p>Complete your artist profile to start applying for projects.</p>
       </div>
 
       {existingApplication?.status === 'rejected' && (
@@ -208,10 +188,8 @@ export default function ArtistApplicationForm() {
           <p className="form-hint" style={{ marginBottom: '1rem' }}>Provide links to your online portfolio (Behance, ArtStation, etc.) or upload images</p>
 
           <div className="form-group">
-            <label className="form-label">Portfolio Links</label>
-            {formData.portfolio_urls.map((url, index) => (
-              <input key={index} type="url" value={url} onChange={(e) => handlePortfolioUrlChange(index, e.target.value)} placeholder={`Link ${index + 1} (optional)`} className="form-input" style={{ marginBottom: '0.5rem' }} />
-            ))}
+            <label className="form-label">Portfolio Link</label>
+            <input type="url" value={formData.portfolio_url} onChange={(e) => setFormData({ ...formData, portfolio_url: e.target.value })} placeholder="https://behance.net/yourportfolio (optional)" className="form-input" />
           </div>
 
           <div className="form-group">
@@ -260,30 +238,6 @@ export default function ArtistApplicationForm() {
               <input type="text" value={formData.other_software} onChange={(e) => setFormData({ ...formData, other_software: e.target.value })} placeholder="Ex: Maya, Cinema 4D, etc." className="form-input" />
             </div>
           )}
-
-          <div className="form-group">
-            <label className="form-label">Architecture Styles *</label>
-            <div className="checkbox-grid">
-              {ARCHITECTURE_STYLES.map((style) => (
-                <label key={style} className="checkbox-label">
-                  <input type="checkbox" checked={formData.architecture_style.includes(style)} onChange={() => setFormData({ ...formData, architecture_style: toggleArrayItem(formData.architecture_style, style) })} className="checkbox-input" />
-                  <span>{style}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Favorite Project Types *</label>
-            <div className="checkbox-grid">
-              {PROJECT_TYPES.map((type) => (
-                <label key={type} className="checkbox-label">
-                  <input type="checkbox" checked={formData.favorite_project_types.includes(type)} onChange={() => setFormData({ ...formData, favorite_project_types: toggleArrayItem(formData.favorite_project_types, type) })} className="checkbox-input" />
-                  <span>{type}</span>
-                </label>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className="form-actions">
