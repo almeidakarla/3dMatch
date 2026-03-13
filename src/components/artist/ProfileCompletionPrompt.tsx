@@ -100,7 +100,9 @@ export default function ProfileCompletionPrompt({ profile }: ProfileCompletionPr
         title: 'Application Not Approved',
         message: 'Unfortunately, your application was not approved at this time.',
         notes: profile.portfolio_review_notes,
-        showAction: false
+        showAction: true,
+        actionText: 'Try Again When You\'re Ready',
+        actionPath: '/dashboard/artist/apply'
       };
     }
 
