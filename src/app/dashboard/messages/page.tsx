@@ -38,7 +38,7 @@ function renderMessageWithLinks(content: string) {
 }
 
 function MessagesContent() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const searchParams = useSearchParams()
   const supabase = createClient()
 
@@ -185,7 +185,16 @@ function MessagesContent() {
 
   const loadAvailableUsers = async () => {
     try {
-      const { data: users, error: usersError } = await supabase.from('profiles').select('id, full_name, profile_photo, user_type').neq('id', user!.id).order('full_name', { ascending: true })
+      // Determine the target user type (opposite of current user)
+      // Artists can only message architects, architects can only message artists
+      const targetUserType = profile?.user_type === 'artista' ? 'arquiteto' : 'artista'
+
+      const { data: users, error: usersError } = await supabase
+        .from('profiles')
+        .select('id, full_name, profile_photo, user_type')
+        .neq('id', user!.id)
+        .eq('user_type', targetUserType)
+        .order('full_name', { ascending: true })
       if (usersError) throw usersError
       const existingUserIds = new Set<string>()
       conversations.forEach((conv: any) => { if (conv.participant1_id !== user!.id) existingUserIds.add(conv.participant1_id); if (conv.participant2_id !== user!.id) existingUserIds.add(conv.participant2_id) })
