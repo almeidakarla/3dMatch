@@ -7592,8 +7592,9 @@ select.form-input {
 }
 
 .success-icon {
-  color: var(--color-gray-700);
-  margin-bottom: 1.5rem;
+  color: var(--color-success);
+  margin: 0 auto 1.5rem;
+  display: block;
 }
 
 .application-success h2 {
@@ -7644,6 +7645,16 @@ select.form-input {
   padding-left: 1.5rem;
   color: var(--color-gray-700);
   line-height: 1.8;
+  list-style-type: decimal;
+}
+
+.success-details ol li {
+  padding-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.application-success .btn {
+  margin-top: 2rem;
 }
 
 .dark-mode .success-details ol {

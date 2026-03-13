@@ -8,6 +8,7 @@ export type NotificationType =
   | 'revision_requested'
   | 'new_message'
   | 'payment_received'
+  | 'new_artist_application'
 
 interface CreateNotificationParams {
   supabase: SupabaseClient

@@ -21,6 +21,7 @@ export type NotificationType =
   | 'revision_requested'
   | 'new_message'
   | 'payment_received'
+  | 'new_artist_application'
 
 interface SendEmailRequest {
   to: string
@@ -40,6 +41,7 @@ function getEmailSubject(type: NotificationType, title: string): string {
     revision_requested: 'Action Required',
     new_message: 'New Message',
     payment_received: 'Payment Confirmed',
+    new_artist_application: 'New Application',
   }
   return `${prefixes[type] || ''} ${title}`.trim()
 }
@@ -62,6 +64,7 @@ function generateEmailHtml(
     revision_requested: 'View Details',
     new_message: 'View Message',
     payment_received: 'View Details',
+    new_artist_application: 'Review Application',
   }
 
   const iconColors: Record<NotificationType, string> = {
@@ -72,6 +75,7 @@ function generateEmailHtml(
     revision_requested: '#f59e0b',
     new_message: '#06b6d4',
     payment_received: '#22c55e',
+    new_artist_application: '#f59e0b',
   }
 
   return `

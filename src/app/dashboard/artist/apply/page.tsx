@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { sendEmailNotification } from '@/lib/notifications'
 import { Send, Upload, CheckCircle, AlertCircle, X, Clock } from 'lucide-react'
 
 const SOFTWARE_OPTIONS = ['SketchUp', 'V-Ray', '3ds Max', 'Corona Renderer', 'Unreal Engine', 'Blender', 'Lumion', 'Twinmotion', 'Enscape', 'Other']
@@ -133,6 +134,20 @@ export default function ArtistApplicationForm() {
       })
 
       if (submitError) throw submitError
+
+      // Send email notification to admin
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL
+      if (adminEmail) {
+        await sendEmailNotification({
+          to: adminEmail,
+          type: 'new_artist_application',
+          title: 'New Artist Application',
+          message: `${profile?.full_name || 'A user'} has submitted an artist application. Please review their portfolio and qualifications.`,
+          link: '/admin/applications',
+          recipientName: 'Admin',
+        })
+      }
+
       setSubmitted(true)
     } catch (err) { console.error('Error submitting application:', err); setError('Error submitting application. Please try again.') }
     finally { setSubmitting(false) }
