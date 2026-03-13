@@ -209,8 +209,8 @@ export default function ArtistApplicationForm() {
         <div className="application-warning">
           <AlertCircle size={24} />
           <div>
-            <strong>Previous Application Rejected</strong>
-            <p>{existingApplication.rejection_reason || 'Your previous application was not approved. Please update your portfolio and try again.'}</p>
+            <strong>Previous Application Not Approved</strong>
+            <p>{existingApplication.rejection_reason || 'Your previous application was not approved. We welcome you to try again with an updated portfolio!'}</p>
           </div>
         </div>
       )}

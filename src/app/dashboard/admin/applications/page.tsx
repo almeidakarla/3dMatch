@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { createNotification, sendEmailNotification } from '@/lib/notifications'
 import { CheckCircle, XCircle, Clock, ExternalLink, FileText, User, Award, Calendar } from 'lucide-react'
 
 interface ArtistApplication {
@@ -52,7 +53,7 @@ export default function ArtistApplicationReviewPage() {
     }
   }
 
-  const handleReview = async (applicationId: string, status: string) => {
+  const handleReview = async (applicationId: string, status: string, application: ArtistApplication) => {
     setReviewing(true)
     try {
       const { data, error } = await supabase.rpc('approve_artist_application', {
@@ -62,7 +63,46 @@ export default function ArtistApplicationReviewPage() {
       })
       if (error) { console.error('Error calling approve function:', error); throw error }
       if (!data || !data.success) throw new Error(data?.error || 'Failed to process application')
-      alert(status === 'approved' ? 'Application approved successfully!' : 'Application rejected.')
+
+      // Send notification to the artist
+      if (status === 'rejected') {
+        // Get the user_id from the application
+        const { data: appData } = await supabase
+          .from('artist_submissions')
+          .select('user_id')
+          .eq('id', applicationId)
+          .single()
+
+        if (appData?.user_id) {
+          // Create in-app notification
+          await createNotification({
+            supabase,
+            userId: appData.user_id,
+            type: 'application_rejected',
+            title: 'Application Update',
+            message: reviewNotes
+              ? `Your artist application was not approved. Feedback: ${reviewNotes}. We welcome you to try again with an updated portfolio!`
+              : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
+            link: '/dashboard/artist/apply'
+          })
+
+          // Send email notification
+          if (application.email) {
+            await sendEmailNotification({
+              to: application.email,
+              type: 'application_rejected',
+              title: 'Application Update',
+              message: reviewNotes
+                ? `Your artist application was not approved. Feedback: ${reviewNotes}. We welcome you to try again with an updated portfolio!`
+                : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
+              link: '/dashboard/artist/apply',
+              recipientName: application.full_name
+            })
+          }
+        }
+      }
+
+      alert(status === 'approved' ? 'Application approved successfully!' : 'Application denied. The artist has been notified.')
       await loadApplications()
       setSelectedApp(null)
       setReviewNotes('')
@@ -80,7 +120,7 @@ export default function ArtistApplicationReviewPage() {
     switch (status) {
       case 'pending': return <span className="status-badge status-pending"><Clock size={14} /> Pending</span>
       case 'approved': return <span className="status-badge status-approved"><CheckCircle size={14} /> Approved</span>
-      case 'rejected': return <span className="status-badge status-rejected"><XCircle size={14} /> Rejected</span>
+      case 'rejected': return <span className="status-badge status-rejected"><XCircle size={14} /> Denied</span>
       default: return null
     }
   }
@@ -105,13 +145,13 @@ export default function ArtistApplicationReviewPage() {
         <div className="stat-card" onClick={() => setFilter('all')}><div className="stat-value">{stats.total}</div><div className="stat-label">Total</div></div>
         <div className="stat-card stat-pending" onClick={() => setFilter('pending')}><div className="stat-value">{stats.pending}</div><div className="stat-label">Pending</div></div>
         <div className="stat-card stat-approved" onClick={() => setFilter('approved')}><div className="stat-value">{stats.approved}</div><div className="stat-label">Approved</div></div>
-        <div className="stat-card stat-rejected" onClick={() => setFilter('rejected')}><div className="stat-value">{stats.rejected}</div><div className="stat-label">Rejected</div></div>
+        <div className="stat-card stat-rejected" onClick={() => setFilter('rejected')}><div className="stat-value">{stats.rejected}</div><div className="stat-label">Denied</div></div>
       </div>
 
       <div className="filter-tabs">
         <button className={filter === 'pending' ? 'filter-tab active' : 'filter-tab'} onClick={() => setFilter('pending')}><Clock size={18} /> Pending ({stats.pending})</button>
         <button className={filter === 'approved' ? 'filter-tab active' : 'filter-tab'} onClick={() => setFilter('approved')}><CheckCircle size={18} /> Approved ({stats.approved})</button>
-        <button className={filter === 'rejected' ? 'filter-tab active' : 'filter-tab'} onClick={() => setFilter('rejected')}><XCircle size={18} /> Rejected ({stats.rejected})</button>
+        <button className={filter === 'rejected' ? 'filter-tab active' : 'filter-tab'} onClick={() => setFilter('rejected')}><XCircle size={18} /> Denied ({stats.rejected})</button>
         <button className={filter === 'all' ? 'filter-tab active' : 'filter-tab'} onClick={() => setFilter('all')}><FileText size={18} /> All ({stats.total})</button>
       </div>
 
@@ -197,8 +237,8 @@ export default function ArtistApplicationReviewPage() {
             </div>
             {selectedApp.status === 'pending' && (
               <div className="modal-footer">
-                <button className="btn-danger" onClick={() => handleReview(selectedApp.id, 'rejected')} disabled={reviewing}><XCircle size={20} /> {reviewing ? 'Processing...' : 'Reject'}</button>
-                <button className="btn-success" onClick={() => handleReview(selectedApp.id, 'approved')} disabled={reviewing}><CheckCircle size={20} /> {reviewing ? 'Processing...' : 'Approve'}</button>
+                <button className="btn-danger" onClick={() => handleReview(selectedApp.id, 'rejected', selectedApp)} disabled={reviewing}><XCircle size={20} /> {reviewing ? 'Processing...' : 'Deny'}</button>
+                <button className="btn-success" onClick={() => handleReview(selectedApp.id, 'approved', selectedApp)} disabled={reviewing}><CheckCircle size={20} /> {reviewing ? 'Processing...' : 'Approve'}</button>
               </div>
             )}
           </div>
