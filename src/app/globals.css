@@ -7944,24 +7944,26 @@ select.form-input {
 }
 
 .modal-close {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--color-gray-50);
+  background: var(--color-gray-100);
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-600);
 }
 
 .dark-mode .modal-close {
   background: var(--color-gray-700);
-  color: var(--color-dark-text);
+  color: var(--color-gray-300);
 }
 
 .modal-close:hover {
-  background: var(--color-gray-300);
-  transform: rotate(90deg);
+  background: var(--color-gray-200);
 }
 
 .dark-mode .modal-close:hover {
