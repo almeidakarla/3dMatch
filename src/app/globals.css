@@ -7394,6 +7394,48 @@ select.form-input {
   color: var(--color-gray-700);
 }
 
+.application-warning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 1.5rem 2rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 2px solid #f59e0b;
+  border-radius: var(--radius-xl);
+  color: var(--color-gray-700);
+  margin-bottom: 2rem;
+}
+
+.application-warning svg {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.application-warning strong {
+  font-size: 1.1rem;
+  color: var(--color-gray-900);
+}
+
+.application-warning p {
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.dark-mode .application-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.dark-mode .application-warning strong {
+  color: var(--color-gray-100);
+}
+
+.dark-mode .application-warning p {
+  color: var(--color-gray-300);
+}
+
 .form-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2.5rem;
