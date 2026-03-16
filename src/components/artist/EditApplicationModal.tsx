@@ -2,14 +2,12 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { X, DollarSign, Calendar, FileText } from 'lucide-react'
+import { X, Calendar, MessageSquare } from 'lucide-react'
 
 interface Application {
   id: string
-  quoted_price: number
-  currency: string
   delivery_timeline: number
-  proposal: string
+  proposal?: string
 }
 
 interface EditApplicationModalProps {
@@ -22,8 +20,6 @@ export default function EditApplicationModal({ application, onClose, onSuccess }
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
-    quoted_price: application.quoted_price?.toString() || '',
-    currency: application.currency || 'BRL',
     delivery_timeline: application.delivery_timeline?.toString() || '',
     proposal: application.proposal || '',
   })
@@ -40,20 +36,8 @@ export default function EditApplicationModal({ application, onClose, onSuccess }
     setLoading(true)
     setError(null)
 
-    if (!formData.quoted_price || parseFloat(formData.quoted_price) <= 0) {
-      setError('Please enter a valid price')
-      setLoading(false)
-      return
-    }
-
     if (!formData.delivery_timeline || parseInt(formData.delivery_timeline) <= 0) {
       setError('Please enter a valid timeline in days')
-      setLoading(false)
-      return
-    }
-
-    if (!formData.proposal || formData.proposal.trim().length === 0) {
-      setError('Please write a proposal')
       setLoading(false)
       return
     }
@@ -62,10 +46,8 @@ export default function EditApplicationModal({ application, onClose, onSuccess }
       const { error: updateError } = await supabase
         .from('applications')
         .update({
-          quoted_price: parseFloat(formData.quoted_price),
-          currency: formData.currency,
           delivery_timeline: parseInt(formData.delivery_timeline),
-          proposal: formData.proposal.trim(),
+          proposal: formData.proposal.trim() || null,
         })
         .eq('id', application.id)
 
@@ -90,41 +72,6 @@ export default function EditApplicationModal({ application, onClose, onSuccess }
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">
-                <DollarSign size={16} />
-                Your Price *
-              </label>
-              <input
-                type="number"
-                name="quoted_price"
-                value={formData.quoted_price}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Currency *</label>
-              <select
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                required
-                className="form-select"
-              >
-                <option value="BRL">BRL (R$)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (&euro;)</option>
-              </select>
-            </div>
-          </div>
-
           <div className="form-group">
             <label className="form-label">
               <Calendar size={16} />
@@ -147,20 +94,19 @@ export default function EditApplicationModal({ application, onClose, onSuccess }
 
           <div className="form-group">
             <label className="form-label">
-              <FileText size={16} />
-              Your Proposal *
+              <MessageSquare size={16} />
+              Any observations?
             </label>
             <textarea
               name="proposal"
               value={formData.proposal}
               onChange={handleChange}
-              rows={6}
-              placeholder="Describe your approach to this project, your relevant experience, and why you are the best choice..."
+              rows={4}
+              placeholder="Optional: share any comments or questions..."
               className="form-textarea"
-              required
             />
             <p className="form-hint">
-              Be clear and professional.
+              Ask to adjust price, timeline, share more details about your workflow, etc.
             </p>
           </div>
 

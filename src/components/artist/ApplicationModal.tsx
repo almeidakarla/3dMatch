@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { X, DollarSign, Calendar, FileText } from 'lucide-react'
+import { X, Calendar, MessageSquare } from 'lucide-react'
 
 interface Project {
   id: string
@@ -22,8 +22,6 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
-    quoted_price: '',
-    currency: 'BRL',
     delivery_timeline: '',
     proposal: '',
   })
@@ -40,20 +38,8 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
     setLoading(true)
     setError(null)
 
-    if (!formData.quoted_price || parseFloat(formData.quoted_price) <= 0) {
-      setError('Please enter a valid price')
-      setLoading(false)
-      return
-    }
-
     if (!formData.delivery_timeline || parseInt(formData.delivery_timeline) <= 0) {
       setError('Please enter a valid timeline in days')
-      setLoading(false)
-      return
-    }
-
-    if (!formData.proposal || formData.proposal.trim().length === 0) {
-      setError('Please write a proposal')
       setLoading(false)
       return
     }
@@ -79,10 +65,8 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
         .insert({
           project_id: project.id,
           artist_id: artistId,
-          quoted_price: parseFloat(formData.quoted_price),
-          currency: formData.currency,
           delivery_timeline: parseInt(formData.delivery_timeline),
-          proposal: formData.proposal.trim(),
+          proposal: formData.proposal.trim() || null,
           status: 'pending',
         })
         .select()
@@ -118,42 +102,6 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
 
           <form onSubmit={handleSubmit} className="application-form">
             <div className="form-group">
-              <label htmlFor="quoted_price" className="form-label">
-                <DollarSign size={18} />
-                Your Price (R$) *
-              </label>
-              <div className="price-input-group">
-                <select
-                  name="currency"
-                  value={formData.currency}
-                  onChange={handleChange}
-                  className="currency-select"
-                  disabled={loading}
-                >
-                  <option value="BRL">BRL</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                </select>
-                <input
-                  type="number"
-                  id="quoted_price"
-                  name="quoted_price"
-                  value={formData.quoted_price}
-                  onChange={handleChange}
-                  min="0"
-                  step="0.01"
-                  placeholder="Ex: 5000.00"
-                  className="form-input"
-                  disabled={loading}
-                  required
-                />
-              </div>
-              <p className="form-hint">
-                Platform fees will be deducted from the total amount
-              </p>
-            </div>
-
-            <div className="form-group">
               <label htmlFor="delivery_timeline" className="form-label">
                 <Calendar size={18} />
                 Delivery Timeline (days) *
@@ -177,22 +125,21 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
 
             <div className="form-group">
               <label htmlFor="proposal" className="form-label">
-                <FileText size={18} />
-                Your Proposal *
+                <MessageSquare size={18} />
+                Any observations?
               </label>
               <textarea
                 id="proposal"
                 name="proposal"
                 value={formData.proposal}
                 onChange={handleChange}
-                rows={6}
-                placeholder="Describe your approach to this project, your relevant experience, and why you are the best choice..."
+                rows={4}
+                placeholder="Optional: share any comments or questions..."
                 className="form-textarea"
                 disabled={loading}
-                required
               />
               <p className="form-hint">
-                Be clear and professional.
+                Ask to adjust price, timeline, share more details about your workflow, etc.
               </p>
             </div>
 
