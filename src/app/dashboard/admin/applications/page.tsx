@@ -64,41 +64,63 @@ export default function ArtistApplicationReviewPage() {
       if (error) { console.error('Error calling approve function:', error); throw error }
       if (!data || !data.success) throw new Error(data?.error || 'Failed to process application')
 
-      // Send notification to the artist
-      if (status === 'rejected') {
-        // Get the user_id from the application
-        const { data: appData } = await supabase
-          .from('artist_submissions')
-          .select('user_id')
-          .eq('id', applicationId)
-          .single()
+      // Get the user_id from the application
+      const { data: appData } = await supabase
+        .from('artist_submissions')
+        .select('user_id')
+        .eq('id', applicationId)
+        .single()
 
-        if (appData?.user_id) {
-          // Create in-app notification
-          await createNotification({
-            supabase,
-            userId: appData.user_id,
+      // Send notification to the artist
+      if (status === 'approved' && appData?.user_id) {
+        // Create in-app notification for approval
+        await createNotification({
+          supabase,
+          userId: appData.user_id,
+          type: 'application_accepted',
+          title: 'Application Approved!',
+          message: 'Congratulations! Your artist application has been approved. You can now browse and apply for projects on 3DMatch!',
+          link: '/dashboard/artist/browse-projects'
+        })
+
+        // Send email notification for approval
+        if (application.email) {
+          await sendEmailNotification({
+            to: application.email,
+            type: 'application_accepted',
+            title: 'Application Approved!',
+            message: 'Congratulations! Your artist application has been approved. You can now browse and apply for projects on 3DMatch!',
+            link: '/dashboard/artist/browse-projects',
+            recipientName: application.full_name
+          })
+        }
+      }
+
+      if (status === 'rejected' && appData?.user_id) {
+        // Create in-app notification for denial
+        await createNotification({
+          supabase,
+          userId: appData.user_id,
+          type: 'application_rejected',
+          title: 'Application Update',
+          message: reviewNotes
+            ? `Your artist application was not approved. Feedback: ${reviewNotes}. We welcome you to try again with an updated portfolio!`
+            : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
+          link: '/dashboard/artist/apply'
+        })
+
+        // Send email notification for denial
+        if (application.email) {
+          await sendEmailNotification({
+            to: application.email,
             type: 'application_rejected',
             title: 'Application Update',
             message: reviewNotes
               ? `Your artist application was not approved. Feedback: ${reviewNotes}. We welcome you to try again with an updated portfolio!`
               : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
-            link: '/dashboard/artist/apply'
+            link: '/dashboard/artist/apply',
+            recipientName: application.full_name
           })
-
-          // Send email notification
-          if (application.email) {
-            await sendEmailNotification({
-              to: application.email,
-              type: 'application_rejected',
-              title: 'Application Update',
-              message: reviewNotes
-                ? `Your artist application was not approved. Feedback: ${reviewNotes}. We welcome you to try again with an updated portfolio!`
-                : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
-              link: '/dashboard/artist/apply',
-              recipientName: application.full_name
-            })
-          }
         }
       }
 
