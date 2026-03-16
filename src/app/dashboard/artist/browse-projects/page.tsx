@@ -315,7 +315,7 @@ export default function BrowseProjectsPage() {
               </div>
               {(minBudget || maxBudget) && (
                 <div className="price-hint">
-                  R$ {minBudget || 0} - R$ {maxBudget || '\u221E'}
+                  ${minBudget || 0} - ${maxBudget || '\u221E'}
                 </div>
               )}
             </div>
@@ -383,7 +383,7 @@ export default function BrowseProjectsPage() {
                   <div className="detail-row">
                     <DollarSign size={16} />
                     <span className="detail-text">
-                      {project.currency} {project.budget?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      ${project.budget?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="detail-row">

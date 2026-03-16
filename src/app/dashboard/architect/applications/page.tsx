@@ -195,7 +195,7 @@ export default function ApplicationsReceivedPage() {
                 <div className="application-item-body">
                   {app.artist.location && <p className="artist-location-small">{app.artist.location}</p>}
                   <div className="application-details-compact">
-                    <div className="detail-compact"><span className="label">Price:</span><span className="value">R$ {app.quoted_price?.toFixed(2)}</span></div>
+                    <div className="detail-compact"><span className="label">Price:</span><span className="value">${app.quoted_price?.toFixed(2)}</span></div>
                     <div className="detail-compact"><span className="label">Timeline:</span><span className="value">{app.delivery_timeline} days</span></div>
                     <div className="detail-compact"><span className="label">Submitted:</span><span className="value">{formatDate(app.created_at)}</span></div>
                   </div>

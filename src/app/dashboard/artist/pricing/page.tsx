@@ -126,7 +126,7 @@ export default function PricingSettingsPage() {
         <div className="form-group">
           <label className="form-label">Base Rate *</label>
           <div className="input-with-prefix">
-            <span className="prefix">R$</span>
+            <span className="prefix">$</span>
             <input
               type="number"
               step="0.01"
@@ -186,7 +186,7 @@ export default function PricingSettingsPage() {
                 Minimum Price
               </label>
               <div className="input-with-prefix">
-                <span className="prefix">R$</span>
+                <span className="prefix">$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -204,7 +204,7 @@ export default function PricingSettingsPage() {
                 Maximum Price
               </label>
               <div className="input-with-prefix">
-                <span className="prefix">R$</span>
+                <span className="prefix">$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -244,8 +244,8 @@ export default function PricingSettingsPage() {
               border: '1px solid #b3d9ff',
             }}>
               <strong>Example:</strong> A project with 5 rooms would cost between{' '}
-              <strong>R$ {(parseFloat(pricing.price_per_room_min) * 5).toFixed(2)}</strong> and{' '}
-              <strong>R$ {(parseFloat(pricing.price_per_room_max) * 5).toFixed(2)}</strong>
+              <strong>${(parseFloat(pricing.price_per_room_min) * 5).toFixed(2)}</strong> and{' '}
+              <strong>${(parseFloat(pricing.price_per_room_max) * 5).toFixed(2)}</strong>
               <br />
               <small style={{ color: '#0066cc' }}>
                 ({pricing.renders_included_per_room} renders x 5 rooms = {pricing.renders_included_per_room * 5} total renders)

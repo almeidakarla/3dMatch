@@ -137,7 +137,7 @@ export default function ArchitectProjectsPage() {
           p_project_id: selectedApplication.project_id,
           p_application_id: selectedApplication.id,
           p_total_amount: selectedApplication.proposed_budget,
-          p_currency: selectedApplication.proposed_currency || 'brl',
+          p_currency: 'usd',
         })
       }
       setMessage('Payment completed! Artist accepted successfully.')
@@ -231,7 +231,7 @@ export default function ArchitectProjectsPage() {
                     {project.title}
                   </h3>
                   <p className="project-meta">
-                    {project.currency} {project.budget?.toLocaleString()} | Deadline: {formatDate(project.deadline)} | {project.applications.length} application(s)
+                    ${project.budget?.toLocaleString('en-US')} | Deadline: {formatDate(project.deadline)} | {project.applications.length} application(s)
                   </p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -278,7 +278,7 @@ export default function ArchitectProjectsPage() {
                           <div className="application-details">
                             <div className="detail-item">
                               <span className="detail-label">Proposed Price:</span>
-                              <span className="detail-value">R$ {app.quoted_price?.toFixed(2)}</span>
+                              <span className="detail-value">${app.quoted_price?.toFixed(2)}</span>
                             </div>
                             <div className="detail-item">
                               <span className="detail-label">Delivery Timeline:</span>

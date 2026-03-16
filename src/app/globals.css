@@ -8959,6 +8959,28 @@ select.form-input {
   flex: 1;
 }
 
+.currency-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: var(--color-gray-100, #f1f3f4);
+  border: 1px solid var(--color-gray-400);
+  border-right: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  font-size: 1rem;
+  color: var(--color-gray-600);
+}
+
+.dark-mode .currency-prefix {
+  background: var(--color-gray-700);
+  border-color: var(--color-gray-600);
+  color: var(--color-gray-300);
+}
+
+.price-input-group .currency-prefix + .form-input {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
 .modal-actions {
   display: flex;
   gap: 1rem;

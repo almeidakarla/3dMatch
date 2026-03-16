@@ -121,7 +121,7 @@ function PaymentForm({ application, onClose, onSuccess }: PaymentFormProps) {
           },
           body: JSON.stringify({
             totalAmount: totalAmount,
-            currency: application.currency || 'brl',
+            currency: 'usd',
             applicationId: application.id,
             projectId: application.project_id,
             artistStripeAccountId: artistStripeAccount
@@ -264,12 +264,12 @@ function PaymentForm({ application, onClose, onSuccess }: PaymentFormProps) {
           <p><strong>Artist:</strong> {application.artist?.full_name || 'N/A'}</p>
           <p><strong>Project:</strong> {application.project?.title || 'N/A'}</p>
           <hr />
-          <p><strong>Total Amount:</strong> {application.currency || 'BRL'} {application.quoted_price ? application.quoted_price.toFixed(2) : '0.00'}</p>
-          <p className="payment-split"><strong>Payment Now (50%):</strong> {application.currency || 'BRL'} {application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'}</p>
-          <p className="payment-split"><strong>Payment on Delivery (50%):</strong> {application.currency || 'BRL'} {application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'}</p>
+          <p><strong>Total Amount:</strong> ${application.quoted_price ? application.quoted_price.toFixed(2) : '0.00'}</p>
+          <p className="payment-split"><strong>Payment Now (50%):</strong> ${application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'}</p>
+          <p className="payment-split"><strong>Payment on Delivery (50%):</strong> ${application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'}</p>
           <hr />
           <p className="fee-notice" style={{fontSize: '0.9rem', color: '#666'}}>
-            * Platform fee (10%): {application.currency || 'BRL'} {application.quoted_price ? (application.quoted_price * 0.10).toFixed(2) : '0.00'}
+            * Platform fee (10%): ${application.quoted_price ? (application.quoted_price * 0.10).toFixed(2) : '0.00'}
           </p>
           <p className="fee-notice" style={{fontSize: '0.9rem', color: '#666'}}>
             * Payment is held until delivery approval
@@ -310,7 +310,7 @@ function PaymentForm({ application, onClose, onSuccess }: PaymentFormProps) {
               disabled={!stripe || loading}
               className="btn-primary"
             >
-              {loading ? 'Processing...' : `Confirm Payment (${application.currency || 'BRL'} ${application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'})`}
+              {loading ? 'Processing...' : `Confirm Payment ($${application.quoted_price ? (application.quoted_price / 2).toFixed(2) : '0.00'})`}
             </button>
             <button
               type="button"

@@ -99,7 +99,7 @@ function FinalPaymentForm({ application, onClose, onSuccess }: FinalPaymentFormP
           },
           body: JSON.stringify({
             totalAmount: application.quoted_price,
-            currency: application.currency || 'brl',
+            currency: 'usd',
             applicationId: application.id,
             projectId: application.project_id,
             artistStripeAccountId: artistData?.stripe_connect_account_id,
@@ -207,14 +207,14 @@ function FinalPaymentForm({ application, onClose, onSuccess }: FinalPaymentFormP
           <p><strong>Artist:</strong> {application.artist?.full_name}</p>
           <p><strong>Project:</strong> {application.project?.title || application.projects?.title}</p>
           <hr />
-          <p><strong>Total Project Value:</strong> {application.currency || 'BRL'} {application.quoted_price?.toFixed(2)}</p>
-          <p><strong>Already Paid (50%):</strong> {application.currency || 'BRL'} {(application.quoted_price / 2)?.toFixed(2)}</p>
+          <p><strong>Total Project Value:</strong> ${application.quoted_price?.toFixed(2)}</p>
+          <p><strong>Already Paid (50%):</strong> ${(application.quoted_price / 2)?.toFixed(2)}</p>
           <p style={{ fontSize: '1.2rem', color: '#007bff' }}>
-            <strong>Final Payment (50%):</strong> {application.currency || 'BRL'} {finalAmount?.toFixed(2)}
+            <strong>Final Payment (50%):</strong> ${finalAmount?.toFixed(2)}
           </p>
           <hr />
           <p className="fee-notice" style={{fontSize: '0.9rem', color: '#666'}}>
-            * Platform fee (10%): {application.currency || 'BRL'} {(application.quoted_price * 0.10)?.toFixed(2)}
+            * Platform fee (10%): ${(application.quoted_price * 0.10)?.toFixed(2)}
           </p>
         </div>
 
@@ -257,7 +257,7 @@ function FinalPaymentForm({ application, onClose, onSuccess }: FinalPaymentFormP
               className="btn-primary"
               style={{ background: '#28a745' }}
             >
-              {loading ? 'Processing...' : `Pay ${application.currency || 'BRL'} ${finalAmount?.toFixed(2)}`}
+              {loading ? 'Processing...' : `Pay $${finalAmount?.toFixed(2)}`}
             </button>
             <button
               type="button"

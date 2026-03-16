@@ -265,7 +265,7 @@ export default function ActiveProjectsPage() {
             </div>
             <div className="info-item">
               <span className="info-label">Amount:</span>
-              <span className="info-value">R$ {selectedProject.quoted_price?.toFixed(2)}</span>
+              <span className="info-value">${selectedProject.quoted_price?.toFixed(2)}</span>
             </div>
             {selectedProject.deadline && (
               <div className="info-item">
@@ -410,7 +410,7 @@ export default function ActiveProjectsPage() {
                     </div>
                     <div className="info-item">
                       <span className="info-label">Amount:</span>
-                      <span className="info-value">R$ {project.quoted_price?.toFixed(2)}</span>
+                      <span className="info-value">${project.quoted_price?.toFixed(2)}</span>
                     </div>
                     {project.deadline && (
                       <div className="info-item">

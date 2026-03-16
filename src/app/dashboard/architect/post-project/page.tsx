@@ -254,15 +254,7 @@ export default function PostAProjectPage() {
           <div className="form-group">
             <label className="form-label">Your Budget (Optional)</label>
             <div className="price-input-group">
-              <select
-                value={formData.currency}
-                onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                className="currency-select"
-              >
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="BRL">BRL</option>
-              </select>
+              <span className="currency-prefix">$</span>
               <input
                 type="number"
                 value={formData.budget}

@@ -121,7 +121,7 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const formatCurrency = (value: number): string => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'BRL' }).format(value)
+  const formatCurrency = (value: number): string => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
   const formatDate = (dateString: string): string => new Date(dateString).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
 
   const getStatusBadge = (status: string) => {

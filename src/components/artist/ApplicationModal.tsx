@@ -96,7 +96,7 @@ export default function ApplicationModal({ project, artistId, onClose, onSuccess
           <div className="project-summary">
             <h3>{project.title}</h3>
             <p className="project-budget">
-              Client Budget: {project.currency} {project.budget?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              Client Budget: ${project.budget?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
           </div>
 

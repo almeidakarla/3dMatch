@@ -69,7 +69,7 @@ export default function LoyaltyProgramPage() {
   }
 
   const formatCurrency = (value: number): string =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'BRL' }).format(value || 0)
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value || 0)
 
   const formatDate = (dateString: string | null): string => {
     if (!dateString) return ''

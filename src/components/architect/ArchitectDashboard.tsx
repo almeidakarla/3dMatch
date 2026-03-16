@@ -246,7 +246,7 @@ const ArchitectDashboard = () => {
                   <div className="project-info-item">
                     <span className="info-label">Budget</span>
                     <span className="info-value">
-                      {project.currency?.toUpperCase()} {project.budget?.toLocaleString()}
+                      ${project.budget?.toLocaleString('en-US')}
                     </span>
                   </div>
                   <div className="project-info-item">

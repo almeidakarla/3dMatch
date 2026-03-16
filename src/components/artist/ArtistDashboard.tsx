@@ -214,7 +214,7 @@ export default function ArtistDashboard() {
                   </div>
                   <div className="project-info-item">
                     <span className="info-label">Amount</span>
-                    <span className="info-value">R$ {project.quoted_price?.toFixed(2)}</span>
+                    <span className="info-value">${project.quoted_price?.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -248,7 +248,7 @@ export default function ArtistDashboard() {
                 <div className="card-header">
                   <h3 className="card-title">{project.title}</h3>
                   <span className="budget-badge">
-                    {project.currency?.toUpperCase()} {project.budget?.toLocaleString()}
+                    ${project.budget?.toLocaleString('en-US')}
                   </span>
                 </div>
                 <p className="card-description">{project.description}</p>

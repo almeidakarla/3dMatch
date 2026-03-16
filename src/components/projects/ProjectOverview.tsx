@@ -262,7 +262,7 @@ export default function ProjectOverview() {
     ]
   }
 
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'BRL' }).format(amount)
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
   const formatDate = (date?: string) => date ? new Date(date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'
   const toggleRound = (index: number) => {
     setExpandedRounds(prev => {

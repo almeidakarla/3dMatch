@@ -212,7 +212,7 @@ export default function MyApplicationsPage() {
                   <div className="application-details-compact">
                     <div className="detail-compact">
                       <span className="label">Price:</span>
-                      <span className="value">R$ {app.quoted_price?.toFixed(2)}</span>
+                      <span className="value">${app.quoted_price?.toFixed(2)}</span>
                     </div>
                     <div className="detail-compact">
                       <span className="label">Timeline:</span>
