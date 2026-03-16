@@ -74,7 +74,7 @@ export default function ArtistApplicationReviewPage() {
       // Send notification to the artist
       if (status === 'approved' && appData?.user_id) {
         // Create in-app notification for approval
-        await createNotification({
+        const notifResult = await createNotification({
           supabase,
           userId: appData.user_id,
           type: 'application_accepted',
@@ -82,10 +82,12 @@ export default function ArtistApplicationReviewPage() {
           message: 'Congratulations! Your artist application has been approved. You can now browse and apply for projects on 3DMatch!',
           link: '/dashboard/artist/browse-projects'
         })
+        console.log('In-app notification result:', notifResult)
 
         // Send email notification for approval
         if (application.email) {
-          await sendEmailNotification({
+          console.log('Sending approval email to:', application.email)
+          const emailResult = await sendEmailNotification({
             to: application.email,
             type: 'application_accepted',
             title: 'Application Approved!',
@@ -93,12 +95,15 @@ export default function ArtistApplicationReviewPage() {
             link: '/dashboard/artist/browse-projects',
             recipientName: application.full_name
           })
+          console.log('Email result:', emailResult)
+        } else {
+          console.log('No email found for application')
         }
       }
 
       if (status === 'rejected' && appData?.user_id) {
         // Create in-app notification for denial
-        await createNotification({
+        const notifResult = await createNotification({
           supabase,
           userId: appData.user_id,
           type: 'application_rejected',
@@ -108,10 +113,12 @@ export default function ArtistApplicationReviewPage() {
             : 'Your artist application was not approved at this time. We welcome you to try again with an updated portfolio!',
           link: '/dashboard/artist/apply'
         })
+        console.log('In-app notification result:', notifResult)
 
         // Send email notification for denial
         if (application.email) {
-          await sendEmailNotification({
+          console.log('Sending denial email to:', application.email)
+          const emailResult = await sendEmailNotification({
             to: application.email,
             type: 'application_rejected',
             title: 'Application Update',
@@ -121,6 +128,9 @@ export default function ArtistApplicationReviewPage() {
             link: '/dashboard/artist/apply',
             recipientName: application.full_name
           })
+          console.log('Email result:', emailResult)
+        } else {
+          console.log('No email found for application')
         }
       }
 
