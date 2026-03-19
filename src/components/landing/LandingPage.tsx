@@ -216,10 +216,10 @@ const defaultData: LandingPageData = {
   benefitsCta: 'Find Your Perfect Artist Today',
 
   platformFeatures: [
-    { iconType: 'dashboard', title: 'Your workspace for architectural visualization', description: 'Manage everything in one place. Browse vetted 3d artists, collaborate in real-time, track project milestones, and approve deliveries.', imageUrl: '/platform-demo.gif', alt: '3dMatch Platform Dashboard' },
-    { iconType: 'checkmark', title: 'Only work with approved talent', description: 'Every 3D artist on 3dMatch is manually reviewed and approved. We verify portfolios, check references, and test architectural accuracy before any artist can join the platform.', imageUrl: '/benefit-approved-talent.png', alt: 'Approved Artist Verification' },
-    { iconType: 'lock', title: 'Pay with confidence', description: 'Your payment is held securely until you approve each delivery. No surprises, no unexpected charges. Release funds only when you are completely satisfied with the work.', imageUrl: '/benefit-secure-payment.png', alt: 'Secure Payment System' },
-    { iconType: 'lightning', title: 'Stay in control at every stage', description: 'Define project scopes, set clear milestones, review progress at each step, and approve deliveries before moving forward. Your project, your timeline, your standards.', imageUrl: '/benefit-project-control.png', alt: 'Project Control Dashboard' },
+    { iconType: 'dashboard', title: 'Your workspace for architectural visualization', description: 'Manage everything in one place. Browse vetted 3d artists, collaborate in real-time, track project milestones, and approve deliveries.', imageUrl: '/app1.png', alt: '3dMatch Platform Dashboard' },
+    { iconType: 'checkmark', title: 'Only work with approved talent', description: 'Every 3D artist on 3dMatch is manually reviewed and approved. We verify portfolios, check references, and test architectural accuracy before any artist can join the platform.', imageUrl: '/app2.png', alt: 'Approved Artist Verification' },
+    { iconType: 'lock', title: 'Pay with confidence', description: 'Your payment is held securely until you approve each delivery. No surprises, no unexpected charges. Release funds only when you are completely satisfied with the work.', imageUrl: '/app3.png', alt: 'Secure Payment System' },
+    { iconType: 'lightning', title: 'Stay in control at every stage', description: 'Define project scopes, set clear milestones, review progress at each step, and approve deliveries before moving forward. Your project, your timeline, your standards.', imageUrl: '/app4.png', alt: 'Project Control Dashboard' },
   ],
 
   portfolioTitle: 'Portfolio Showcase',
