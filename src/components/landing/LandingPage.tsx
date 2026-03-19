@@ -329,7 +329,12 @@ const LandingPage = ({ data }: LandingPageProps) => {
     : defaultData.featuredArtists!;
 
   const platformFeatures = content.platformFeatures && content.platformFeatures.length > 0
-    ? content.platformFeatures
+    ? content.platformFeatures.map((feature, index) => ({
+        ...defaultData.platformFeatures![index],
+        ...feature,
+        // Ensure imageUrl falls back to default if not provided
+        imageUrl: feature.imageUrl || defaultData.platformFeatures![index]?.imageUrl,
+      }))
     : defaultData.platformFeatures!;
 
   const howItWorksSteps = content.howItWorksSteps && content.howItWorksSteps.length > 0
